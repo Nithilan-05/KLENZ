@@ -1,134 +1,180 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
+@{
+    var pageName = ViewContext.RouteData.Values["Page"]?.ToString() ?? "";
+    var ctrl = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
+    var signedIn = User.Identity?.IsAuthenticated ?? false;
+
+    // Sign-in (and first-time account setup) use a bare page without the app shell
+    var bare = pageName.Contains("/Account/Login") || (pageName.Contains("/Account/Register") && !signedIn);
+
+    Func<string, string> on = name => string.Equals(ctrl, name, StringComparison.OrdinalIgnoreCase) ? "on" : "";
+}
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - KLENZ</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#0c131f" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="KLENZ" />
+    <title>@ViewData["Title"] · KLENZ</title>
 
+    <script>
+        (function () {
+            try {
+                var t = localStorage.getItem('klenz-theme');
+                if (t) { document.documentElement.setAttribute('data-theme', t); }
+            } catch (e) { }
+        })();
+    </script>
+
+    <link rel="manifest" href="~/manifest.webmanifest" />
+    <link rel="icon" type="image/svg+xml" href="~/images/icon.svg" />
+    <link rel="alternate icon" href="~/favicon.ico" />
+    <link rel="apple-touch-icon" href="~/images/icon-180.png" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    @* <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" /> *@
-    <link rel="stylesheet" href="~/KLENZ.styles.css" asp-append-version="true" />
-    <link rel="icon" type="image/png" href="@Url.Content("~/favicon.ico")" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css" />
+    <link rel="stylesheet" href="~/css/klenz.css" asp-append-version="true" />
     @RenderSection("Styles", required: false)
 </head>
-<body>
-    <div class="content">
-        <!-- Conditionally hide navbar for Login & Register auth pages -->
-        @{
-            var pageName = ViewContext.RouteData.Values["Page"]?.ToString() ?? "";
-            var isAuthPage = pageName.Contains("/Account/Register") || pageName.Contains("/Account/Login");
-        }
-        @if (!isAuthPage)
-        {
-            <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow mb-3 rounded-navbar">
-                <div class="container-fluid">
-                    <!-- Left: Brand & Toggler -->
-                    <a class="navbar-brand fw-bold text-primary" asp-area="" asp-controller="Home" asp-action="Index">KLENZ</a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-
-                    <!-- Center: Collapsible Menu -->
-                    <div class="collapse navbar-collapse" id="navbarNav">
-                        <ul class="navbar-nav me-auto">
-                            <li class="nav-item">
-                                <a class="nav-link text-dark fw-medium" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle text-dark fw-medium" href="#" id="nav-sales-dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Sales <i class="bi bi-chevron-up dropdown-icon ms-1"></i>
-                                </a>
-                                <ul class="dropdown-menu shadow-lg border-0" aria-labelledby="nav-sales-dropdown">
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="SalesEnquiries" asp-action="Index"><i class="bi bi-chat-left-dots me-2 text-primary"></i>Sales Enquiry</a></li>
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="QuotationReports" asp-action="Index"><i class="bi bi-file-earmark-ruled me-2 text-success"></i>Quotation Report</a></li>
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="PositiveEnquiries" asp-action="Index"><i class="bi bi-check-circle me-2 text-info"></i>Positive Enquiry</a></li>
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="ProjectLists" asp-action="Index"><i class="bi bi-list-task me-2 text-warning"></i>Project List</a></li>
-                                </ul>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle text-dark fw-medium" href="#" id="nav-project-dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Projects <i class="bi bi-chevron-up dropdown-icon ms-1"></i>
-                                </a>
-                                <ul class="dropdown-menu shadow-lg border-0" aria-labelledby="nav-project-dropdown">
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="ProjectConsultancy" asp-action="Index"><i class="bi bi-briefcase me-2 text-secondary"></i>Consultancy</a></li>
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="ProjectTenderList" asp-action="Index"><i class="bi bi-file-text me-2 text-danger"></i>Tender List</a></li>
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="ProjectToBeTenderList" asp-action="Index"><i class="bi bi-hourglass-split me-2 text-warning"></i>To Be Tender List</a></li>
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="ProjectKlenzChemicals" asp-action="Index"><i class="bi bi-flask me-2 text-success"></i>Klenz Chemicals</a></li>
-                                </ul>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle text-dark fw-medium" href="#" id="nav-services-dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Services <i class="bi bi-chevron-up dropdown-icon ms-1"></i>
-                                </a>
-                                <ul class="dropdown-menu shadow-lg border-0" aria-labelledby="nav-services-dropdown">
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="FinancialYears" asp-action="Index"><i class="bi bi-calendar2-check me-2 text-primary"></i>Financial Years</a></li>
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="GSTTypes" asp-action="Index"><i class="bi bi-percent me-2 text-success"></i>GST Types</a></li>
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="CompanyNames" asp-action="Index"><i class="bi bi-building me-2 text-warning"></i>Company Names</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <!-- Right: Profile Dropdown -->
-                    <div class="dropdown ms-auto">
-                        @await Component.InvokeAsync("UserProfile")
-                    </div>
-                </div>
-            </nav>
-
-        }
-
-        <main role="main" class="pb-3">
+<body class="@(bare ? "auth" : "")">
+    @if (bare)
+    {
+        <aside class="auth-aside">
+            <a class="side-brand" href="~/">
+                <span class="logo">K</span>
+                <span><b>KLENZ</b><small>Sales and projects</small></span>
+            </a>
+            <div>
+                <h2>Every enquiry, quotation and tender in one place.</h2>
+                <p>Track what came in, what was quoted, and what needs a follow-up today.</p>
+                <ul>
+                    <li><i class="bi bi-check2-circle"></i>Follow-up reminders so nothing is missed</li>
+                    <li><i class="bi bi-check2-circle"></i>Live numbers for the financial year</li>
+                    <li><i class="bi bi-check2-circle"></i>Works on your phone and your desk</li>
+                </ul>
+            </div>
+            <small>KLENZ internal workspace</small>
+        </aside>
+        <main class="auth-main" role="main">
             @RenderBody()
         </main>
-    </div>
+    }
+    else
+    {
+        <div class="app">
+            <aside class="side" id="side" aria-label="Main navigation">
+                <a class="side-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <span class="logo">K</span>
+                    <span><b>KLENZ</b><small>Sales and projects</small></span>
+                </a>
+                <nav class="side-nav">
+                    <a class="@on("Home")" asp-area="" asp-controller="Home" asp-action="Index"><i class="bi bi-speedometer2"></i>Overview</a>
 
-    <!-- 🔹 jQuery (Ensure only ONE instance is loaded) -->
+                    <div class="side-label">Sales</div>
+                    <a class="@on("SalesEnquiries")" asp-area="" asp-controller="SalesEnquiries" asp-action="Index"
+                       data-noun="enquiry" data-create="@Url.Action("Create", "SalesEnquiries", new { area = "" })"><i class="bi bi-chat-left-text"></i>Enquiries</a>
+                    <a class="@on("QuotationReports")" asp-area="" asp-controller="QuotationReports" asp-action="Index"
+                       data-noun="quotation" data-create="@Url.Action("Create", "QuotationReports", new { area = "" })"><i class="bi bi-file-earmark-text"></i>Quotations</a>
+                    <a class="@on("PositiveEnquiries")" asp-area="" asp-controller="PositiveEnquiries" asp-action="Index"
+                       data-noun="positive enquiry" data-create="@Url.Action("Create", "PositiveEnquiries", new { area = "" })"><i class="bi bi-check2-circle"></i>Positive enquiries</a>
+                    <a class="@on("ProjectLists")" asp-area="" asp-controller="ProjectLists" asp-action="Index"
+                       data-noun="project" data-create="@Url.Action("Create", "ProjectLists", new { area = "" })"><i class="bi bi-clipboard-check"></i>Project list</a>
+
+                    <div class="side-label">Projects</div>
+                    <a class="@on("ProjectConsultancy")" asp-area="" asp-controller="ProjectConsultancy" asp-action="Index"
+                       data-noun="consultancy project" data-create="@Url.Action("Create", "ProjectConsultancy", new { area = "" })"><i class="bi bi-briefcase"></i>Consultancy</a>
+                    <a class="@on("ProjectTenderList")" asp-area="" asp-controller="ProjectTenderList" asp-action="Index"
+                       data-noun="tender" data-create="@Url.Action("Create", "ProjectTenderList", new { area = "" })"><i class="bi bi-file-ruled"></i>Tender list</a>
+                    <a class="@on("ProjectToBeTenderList")" asp-area="" asp-controller="ProjectToBeTenderList" asp-action="Index"
+                       data-noun="upcoming tender" data-create="@Url.Action("Create", "ProjectToBeTenderList", new { area = "" })"><i class="bi bi-hourglass-split"></i>To be tendered</a>
+                    <a class="@on("ProjectKlenzChemicals")" asp-area="" asp-controller="ProjectKlenzChemicals" asp-action="Index"
+                       data-noun="Klenz Chemicals project" data-create="@Url.Action("Create", "ProjectKlenzChemicals", new { area = "" })"><i class="bi bi-droplet-half"></i>Klenz Chemicals</a>
+
+                    <div class="side-label">Setup</div>
+                    <a class="@on("CompanyNames")" asp-area="" asp-controller="CompanyNames" asp-action="Index"
+                       data-noun="company" data-create="@Url.Action("Create", "CompanyNames", new { area = "" })"><i class="bi bi-building"></i>Companies</a>
+                    <a class="@on("FinancialYears")" asp-area="" asp-controller="FinancialYears" asp-action="Index"><i class="bi bi-calendar2-range"></i>Financial years</a>
+                    <a class="@on("GSTTypes")" asp-area="" asp-controller="GSTTypes" asp-action="Index"><i class="bi bi-percent"></i>GST types</a>
+                    <a class="@on("Users")" asp-area="" asp-controller="Users" asp-action="Index"><i class="bi bi-people"></i>Users</a>
+                </nav>
+                <div class="side-foot">KLENZ internal workspace</div>
+            </aside>
+
+            <div class="main">
+                <header class="top">
+                    <button type="button" class="tb menu-btn" data-menu aria-label="Open menu"><i class="bi bi-list"></i></button>
+                    <div class="top-title">@ViewData["Title"]</div>
+
+                    <button type="button" class="kbar" data-search-open aria-label="Search">
+                        <i class="bi bi-search"></i><span>Search enquiries, companies, pages</span><kbd>Ctrl K</kbd>
+                    </button>
+                    <button type="button" class="tb" id="themeBtn" aria-label="Switch theme"><i class="bi bi-moon"></i></button>
+                    <div class="position-relative">
+                        <button type="button" class="tb" id="bell" aria-label="Follow-up reminders"
+                                data-url="@Url.Action("Reminders", "Home", new { area = "" })"
+                                data-details="@Url.Action("Details", "SalesEnquiries", new { area = "" })">
+                            <i class="bi bi-bell"></i><span class="dot"></span>
+                        </button>
+                        <div class="pop" id="remPop">
+                            <div class="card-head"><h3>Follow-ups</h3></div>
+                            <div class="rows"><div class="empty">Loading reminders…</div></div>
+                        </div>
+                    </div>
+                    <div class="dropdown">
+                        @await Component.InvokeAsync("UserProfile")
+                    </div>
+                </header>
+
+                <main role="main" class="content">
+                    @RenderBody()
+                </main>
+            </div>
+        </div>
+
+        <nav class="tabbar" aria-label="Quick navigation">
+            <a class="@on("Home")" asp-area="" asp-controller="Home" asp-action="Index"><i class="bi bi-speedometer2"></i>Home</a>
+            <a class="@on("SalesEnquiries")" asp-area="" asp-controller="SalesEnquiries" asp-action="Index"><i class="bi bi-chat-left-text"></i>Enquiries</a>
+            <a class="fab" id="fab" asp-area="" asp-controller="SalesEnquiries" asp-action="Create" aria-label="New enquiry"><span><i class="bi bi-plus-lg"></i></span></a>
+            <a class="@on("QuotationReports")" asp-area="" asp-controller="QuotationReports" asp-action="Index"><i class="bi bi-file-earmark-text"></i>Quotes</a>
+            <button type="button" data-menu aria-label="More pages"><i class="bi bi-grid"></i>More</button>
+        </nav>
+
+        <div class="scrim" id="scrim"></div>
+        <div class="pal" id="pal" role="dialog" aria-label="Search"
+             data-search="@Url.Action("Search", "Home", new { area = "" })"
+             data-details="@Url.Action("Details", "SalesEnquiries", new { area = "" })">
+            <header>
+                <i class="bi bi-search"></i>
+                <input type="search" placeholder="Search enquiries, companies, pages" aria-label="Search" autocomplete="off" />
+                <kbd>Esc</kbd>
+            </header>
+            <div class="pal-list"></div>
+        </div>
+    }
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
-
-    <!-- 🔹 Bootstrap & Site Scripts -->
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-
-    <!-- 🔹 DataTables -->
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
-
-    <!-- 🔹 Custom Scripts (Moved to Bottom) -->
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script src="~/js/custom_layout.js"></script>
-    <script src="~/js/custom_datatables.js"></script>
-    <script src="~/js/site.js"></script>
-
-    <!-- 🔹 Toastr Notifications -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/klenz.js" asp-append-version="true"></script>
     <script>
-        $(document).ready(function () {
+        $(function () {
             toastr.options = {
-                "closeButton": true,
-                "progressBar": true,
-                "positionClass": "toast-top-right",
-                "showDuration": "300",
-                "hideDuration": "1000",
-                "timeOut": "4000",
-                "extendedTimeOut": "1000",
-                "showEasing": "swing",
-                "hideEasing": "linear",
-                "showMethod": "fadeIn",
-                "hideMethod": "fadeOut"
+                closeButton: true,
+                progressBar: true,
+                positionClass: window.matchMedia('(max-width: 860px)').matches ? 'toast-top-center' : 'toast-top-right',
+                timeOut: 4000
             };
 
             @if (TempData["SuccessMessage"] != null)

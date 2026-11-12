@@ -1,7 +1,9 @@
-﻿using KLENZ.Data;
+using KLENZ.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using System.IO;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -40,6 +42,14 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.SlidingExpiration = true;
 });
 
+// Every page requires a signed-in user unless it is marked [AllowAnonymous]
+builder.Services.AddAuthorization(options =>
+{
+    options.FallbackPolicy = new AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .Build();
+});
+
 // ✅ Configure Data Protection (Fixes hardcoded path)
 builder.Services.AddDataProtection()
     .PersistKeysToFileSystem(new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "KLENZKeys")))
@@ -66,10 +76,23 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseForwardedHeaders();
+app.UseAuthentication();
+
+// Uploaded attachments are only served to signed-in users
+app.Use(async (context, next) =>
+{
+    if (context.Request.Path.StartsWithSegments("/uploads")
+        && context.User.Identity?.IsAuthenticated != true)
+    {
+        await context.ChallengeAsync();
+        return;
+    }
+    await next();
+});
+
 app.UseStaticFiles();
 app.UseRouting();
 app.UseCors("AllowAll");
-app.UseAuthentication();
 app.UseAuthorization();
 
 // ✅ Map Razor Pages (Identity UI)

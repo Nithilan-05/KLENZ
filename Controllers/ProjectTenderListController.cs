@@ -81,7 +81,7 @@ namespace KLENZ.Controllers
         {
             ViewData["CompanyNameId"] = new SelectList(_context.CompanyName, "Id", "FullName");
             ViewData["FyYear"] = new SelectList(_context.FinancialYear, "Id", "FyYear");
-            ViewData["GSTTypeId"] = new SelectList(_context.GSTTypes, "Id", "Id");
+            ViewData["GSTTypeId"] = new SelectList(_context.GSTTypes, "Id", "GSTType");
             return View();
         }
 
@@ -92,6 +92,12 @@ namespace KLENZ.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,FyYear,WorkOrderDate,CompanyNameId,CustomerDetails,WorkDetails,ProjectCost,GSTTypeId,Total,WorkDuration,Remarks,CreatedDateTime,CreatedUserId")] Project_TenderList project_TenderList)
         {
+            // Set on the server so nobody has to type who created the record or when
+            project_TenderList.CreatedDateTime = DateTime.Now;
+            project_TenderList.CreatedUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            ModelState.Remove(nameof(project_TenderList.CreatedDateTime));
+            ModelState.Remove(nameof(project_TenderList.CreatedUserId));
+
             if (ModelState.IsValid)
             {
                 _context.Add(project_TenderList);
@@ -100,7 +106,7 @@ namespace KLENZ.Controllers
             }
             ViewData["CompanyNameId"] = new SelectList(_context.CompanyName, "Id", "FullName", project_TenderList.CompanyNameId);
             ViewData["FyYear"] = new SelectList(_context.FinancialYear, "Id", "FyYear", project_TenderList.FyYear);
-            ViewData["GSTTypeId"] = new SelectList(_context.GSTTypes, "Id", "Id", project_TenderList.GSTTypeId);
+            ViewData["GSTTypeId"] = new SelectList(_context.GSTTypes, "Id", "GSTType", project_TenderList.GSTTypeId);
             return View(project_TenderList);
         }
 
@@ -119,7 +125,7 @@ namespace KLENZ.Controllers
             }
             ViewData["CompanyNameId"] = new SelectList(_context.CompanyName, "Id", "FullName", project_TenderList.CompanyNameId);
             ViewData["FyYear"] = new SelectList(_context.FinancialYear, "Id", "FyYear", project_TenderList.FyYear);
-            ViewData["GSTTypeId"] = new SelectList(_context.GSTTypes, "Id", "Id", project_TenderList.GSTTypeId);
+            ViewData["GSTTypeId"] = new SelectList(_context.GSTTypes, "Id", "GSTType", project_TenderList.GSTTypeId);
             return View(project_TenderList);
         }
 
@@ -157,7 +163,7 @@ namespace KLENZ.Controllers
             }
             ViewData["CompanyNameId"] = new SelectList(_context.CompanyName, "Id", "FullName", project_TenderList.CompanyNameId);
             ViewData["FyYear"] = new SelectList(_context.FinancialYear, "Id", "FyYear", project_TenderList.FyYear);
-            ViewData["GSTTypeId"] = new SelectList(_context.GSTTypes, "Id", "Id", project_TenderList.GSTTypeId);
+            ViewData["GSTTypeId"] = new SelectList(_context.GSTTypes, "Id", "GSTType", project_TenderList.GSTTypeId);
             return View(project_TenderList);
         }
 

@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KLENZ — design concept</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<style>
+:root{
+  --bg:#090a09; --panel:#111312; --panel-2:#181b19; --panel-3:#1f2321;
+  --line:rgba(255,255,255,.07); --line-2:rgba(255,255,255,.13);
+  --text:#eef1ec; --muted:#8c938d; --faint:#5d635e;
+  --accent:#c8f560; --accent-ink:#0b0d0a; --accent-text:#c8f560; --accent-soft:rgba(200,245,96,.12);
+  --amber:#f6bd4f; --amber-soft:rgba(246,189,79,.13);
+  --blue:#7db9ff; --blue-soft:rgba(125,185,255,.13);
+  --violet:#b9a0ff; --violet-soft:rgba(185,160,255,.14);
+  --red:#ff8170; --red-soft:rgba(255,129,112,.13);
+  --shadow:0 24px 60px -20px rgba(0,0,0,.7);
+  --r-lg:22px; --r-md:14px; --r-sm:10px;
+  --sans:'Geist',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --mono:'Geist Mono',ui-monospace,Menlo,monospace;
+  --serif:'Instrument Serif',Georgia,serif;
+}
+[data-theme="light"]{
+  --bg:#efeee8; --panel:#ffffff; --panel-2:#f6f5f0; --panel-3:#ecebe5;
+  --line:rgba(12,14,12,.08); --line-2:rgba(12,14,12,.16);
+  --text:#0d0f0d; --muted:#676c66; --faint:#9a9e98;
+  --accent:#c8f560; --accent-ink:#0b0d0a; --accent-text:#3d6a00; --accent-soft:rgba(120,180,0,.14);
+  --amber:#a66a00; --amber-soft:rgba(214,150,20,.16);
+  --blue:#1f6fd0; --blue-soft:rgba(31,111,208,.11);
+  --violet:#6a45d6; --violet-soft:rgba(106,69,214,.11);
+  --red:#c93a26; --red-soft:rgba(201,58,38,.1);
+  --shadow:0 24px 60px -24px rgba(20,24,20,.28);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;line-height:1.45;-webkit-font-smoothing:antialiased;transition:background .3s,color .3s}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+input,select,textarea{font:inherit;color:inherit}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--accent-text);outline-offset:2px;border-radius:8px}
+.mono{font-family:var(--mono);font-feature-settings:"tnum"}
+.serif{font-family:var(--serif);font-style:italic;font-weight:400;letter-spacing:-.01em}
+
+/* shell */
+.app{display:grid;grid-template-columns:248px minmax(0,1fr);min-height:100vh;padding:12px;gap:12px}
+.side{position:sticky;top:12px;height:calc(100vh - 24px);background:var(--panel);border:1px solid var(--line);border-radius:var(--r-lg);padding:16px 12px;display:flex;flex-direction:column;overflow:auto}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 8px 18px}
+.logo{width:32px;height:32px;border-radius:10px;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-weight:700;font-size:16px;letter-spacing:-.04em;box-shadow:0 0 28px -4px var(--accent)}
+[data-theme="light"] .logo{box-shadow:none}
+.brand b{font-size:16px;letter-spacing:.14em;font-weight:600}
+.brand span{margin-left:auto;font:500 10px var(--mono);color:var(--muted);border:1px solid var(--line-2);border-radius:99px;padding:2px 7px}
+.nav-label{font:500 10.5px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--faint);padding:16px 10px 6px}
+.nav a{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:var(--r-sm);color:var(--muted);font-weight:500;position:relative;transition:background .15s,color .15s}
+.nav a i{font-size:16px}
+.nav a:hover{background:var(--panel-2);color:var(--text)}
+.nav a.on{background:var(--panel-3);color:var(--text)}
+.nav a.on::before{content:"";position:absolute;left:-12px;top:9px;bottom:9px;width:3px;border-radius:0 3px 3px 0;background:var(--accent-text)}
+.nav a em{margin-left:auto;font:500 11px var(--mono);font-style:normal;color:var(--muted)}
+.nav a em.hot{background:var(--accent);color:var(--accent-ink);border-radius:99px;padding:1px 7px}
+.me{margin-top:auto;display:flex;align-items:center;gap:10px;padding:10px;border:1px solid var(--line);border-radius:var(--r-md);background:var(--panel-2)}
+.av{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font:600 12px var(--sans);background:var(--violet-soft);color:var(--violet);flex:none}
+.me small{display:block;color:var(--muted);font-size:12px}
+
+.main{min-width:0;display:flex;flex-direction:column;gap:12px}
+.top{display:flex;align-items:center;gap:10px;padding:4px 4px 0}
+.crumb{color:var(--muted);font-weight:500}.crumb b{color:var(--text);font-weight:500}
+.kbar{margin-left:auto;display:flex;align-items:center;gap:10px;min-width:280px;padding:8px 12px;border:1px solid var(--line);border-radius:99px;background:var(--panel);color:var(--muted);transition:border-color .15s}
+.kbar:hover{border-color:var(--line-2)}
+.kbar kbd,.kbd{margin-left:auto;font:500 11px var(--mono);border:1px solid var(--line-2);border-radius:6px;padding:1px 6px;color:var(--muted)}
+.pill{display:inline-flex;align-items:center;gap:7px;padding:8px 12px;border:1px solid var(--line);border-radius:99px;background:var(--panel);font-weight:500;white-space:nowrap}
+.pill:hover{border-color:var(--line-2)}
+.icon-btn{width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:var(--panel);display:grid;place-items:center;position:relative}
+.icon-btn:hover{border-color:var(--line-2)}
+.icon-btn .dot{position:absolute;top:8px;right:9px;width:7px;height:7px;border-radius:50%;background:var(--accent-text)}
+.menu-btn{display:none}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;gap:8px;padding:9px 14px;border-radius:99px;font-weight:600;border:1px solid var(--line-2);background:var(--panel-2);transition:transform .12s,background .15s,border-color .15s;white-space:nowrap}
+.btn:hover{background:var(--panel-3)}
+.btn:active{transform:scale(.97)}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:transparent;box-shadow:0 8px 28px -10px var(--accent)}
+.btn.primary:hover{filter:brightness(1.06)}
+[data-theme="light"] .btn.primary{box-shadow:none}
+.btn.ghost{background:transparent}
+
+/* bento */
+.view{display:none}.view.on{display:block}
+.bento{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:12px}
+.tile{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-lg);padding:18px;position:relative;overflow:hidden;animation:rise .55s cubic-bezier(.2,.7,.2,1) both;transition:border-color .2s,transform .2s}
+.tile:hover{border-color:var(--line-2)}
+.bento>.tile:nth-child(1){animation-delay:.02s}.bento>.tile:nth-child(2){animation-delay:.07s}.bento>.tile:nth-child(3){animation-delay:.12s}.bento>.tile:nth-child(4){animation-delay:.16s}.bento>.tile:nth-child(5){animation-delay:.2s}.bento>.tile:nth-child(6){animation-delay:.24s}.bento>.tile:nth-child(7){animation-delay:.28s}.bento>.tile:nth-child(8){animation-delay:.32s}.bento>.tile:nth-child(9){animation-delay:.36s}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.c7{grid-column:span 7}.c5{grid-column:span 5}.c4{grid-column:span 4}.c3{grid-column:span 3}.c8{grid-column:span 8}.c12{grid-column:span 12}
+.t-head{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+.t-head h3{margin:0;font-size:13px;font-weight:500;color:var(--muted)}
+.t-head a,.t-head button{margin-left:auto;color:var(--muted);font-size:12.5px;font-weight:500;display:inline-flex;gap:4px;align-items:center}
+.t-head a:hover{color:var(--text)}
+.hero{min-height:230px;display:flex;flex-direction:column;background:
+  radial-gradient(520px 300px at 92% -8%,color-mix(in srgb,var(--accent) 26%,transparent),transparent 62%),var(--panel)}
+.hero::after{content:"";position:absolute;inset:0;background-image:radial-gradient(var(--line-2) 1px,transparent 1px);background-size:18px 18px;-webkit-mask-image:linear-gradient(115deg,transparent 45%,#000 100%);mask-image:linear-gradient(115deg,transparent 45%,#000 100%);pointer-events:none}
+.hero>*{position:relative;z-index:1}
+.eyebrow{font:500 11px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:8px}
+.live{width:7px;height:7px;border-radius:50%;background:var(--accent-text);box-shadow:0 0 0 4px var(--accent-soft)}
+.hero h1{font-size:clamp(30px,3.4vw,44px);line-height:1.04;letter-spacing:-.035em;font-weight:600;margin:14px 0 10px;max-width:15ch}
+.hero h1 .serif{font-size:1.1em;color:var(--accent-text)}
+.hero p{margin:0;color:var(--muted);max-width:46ch;font-size:15px}
+.hero p b{color:var(--text);font-weight:500}
+.hero .row{margin-top:auto;padding-top:18px;display:flex;gap:8px;flex-wrap:wrap}
+.big{font-size:42px;font-weight:600;letter-spacing:-.04em;line-height:1}
+.big small{font-size:18px;color:var(--muted);font-weight:500;letter-spacing:-.01em;margin-left:4px}
+.delta{display:inline-flex;align-items:center;gap:3px;font:500 12px var(--mono);padding:3px 8px;border-radius:99px;background:var(--accent-soft);color:var(--accent-text)}
+.delta.down{background:var(--red-soft);color:var(--red)}
+.spark{display:block;width:100%;height:92px;margin-top:14px}
+.kpi .num{font-size:30px;font-weight:600;letter-spacing:-.035em;line-height:1.1;margin-top:2px}
+.kpi .foot{display:flex;align-items:center;gap:8px;margin-top:10px;color:var(--muted);font-size:12.5px}
+.kpi .ic{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;margin-left:auto;font-size:15px}
+.bars{display:flex;align-items:flex-end;gap:4px;height:34px;margin-top:12px}
+.bars i{flex:1;border-radius:3px;background:var(--panel-3);transform-origin:bottom;animation:grow .7s cubic-bezier(.2,.7,.2,1) both}
+.bars i.hi{background:var(--accent-text)}
+@keyframes grow{from{transform:scaleY(0)}to{transform:none}}
+.funnel{display:grid;gap:12px}
+.f-row{display:grid;grid-template-columns:92px minmax(0,1fr) 46px;align-items:center;gap:12px;font-size:13px}
+.f-row span{color:var(--muted)}
+.f-track{height:30px;border-radius:9px;background:var(--panel-2);overflow:hidden}
+.f-fill{height:100%;border-radius:9px;background:linear-gradient(90deg,color-mix(in srgb,var(--accent-text) 85%,transparent),color-mix(in srgb,var(--accent-text) 35%,transparent));display:flex;align-items:center;padding-left:10px;font:500 12px var(--mono);color:var(--accent-ink);width:0;transition:width 1s cubic-bezier(.2,.7,.2,1)}
+[data-theme="light"] .f-fill{color:#fff;background:linear-gradient(90deg,#3d6a00,#7fb11a)}
+.f-row b{font:500 12px var(--mono);text-align:right}
+.list{display:grid;gap:2px;margin:-6px}
+.li{display:flex;align-items:center;gap:12px;padding:9px 6px;border-radius:var(--r-sm);transition:background .15s}
+.li:hover{background:var(--panel-2)}
+.date{width:42px;height:42px;border-radius:12px;background:var(--panel-2);border:1px solid var(--line);display:grid;place-items:center;text-align:center;line-height:1;flex:none}
+.date b{font-size:15px;font-weight:600}.date small{font:500 9.5px var(--mono);text-transform:uppercase;color:var(--muted);display:block;margin-top:2px}
+.date.due{background:var(--amber-soft);border-color:transparent}.date.due b,.date.due small{color:var(--amber)}
+.li>div:not(.date){min-width:0;flex:1}
+.li strong{display:block;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.li>div:not(.date) small{color:var(--muted);font-size:12.5px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.check{width:28px;height:28px;border-radius:50%;border:1px solid var(--line-2);display:grid;place-items:center;color:var(--muted);flex:none;transition:all .15s}
+.check:hover,.check.done{background:var(--accent);color:var(--accent-ink);border-color:transparent}
+.ring{display:flex;align-items:center;gap:16px}
+.ring svg{width:104px;height:104px;flex:none}
+.legend{display:grid;gap:8px;font-size:13px}
+.legend span{display:flex;align-items:center;gap:8px;color:var(--muted)}
+.legend i{width:8px;height:8px;border-radius:3px}
+.legend b{color:var(--text);font:500 13px var(--mono);margin-left:auto;padding-left:12px}
+
+/* status + table */
+.st{display:inline-flex;align-items:center;gap:6px;padding:3px 10px 3px 8px;border-radius:99px;font-size:12.5px;font-weight:500;white-space:nowrap}
+.st::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.st.new{background:var(--blue-soft);color:var(--blue)}
+.st.follow{background:var(--amber-soft);color:var(--amber)}
+.st.quoted{background:var(--violet-soft);color:var(--violet)}
+.st.positive{background:var(--accent-soft);color:var(--accent-text)}
+.st.lost{background:var(--red-soft);color:var(--red)}
+.page-head{display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap;padding:6px 4px 14px}
+.page-head h2{margin:0;font-size:30px;letter-spacing:-.035em;font-weight:600;line-height:1.1}
+.page-head h2 .serif{color:var(--accent-text);font-size:1.08em}
+.page-head p{margin:4px 0 0;color:var(--muted)}
+.page-head .sp{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+.toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:12px 14px;border-bottom:1px solid var(--line)}
+.seg{display:inline-flex;padding:3px;border-radius:99px;background:var(--panel-2);border:1px solid var(--line)}
+.seg button{padding:5px 12px;border-radius:99px;font-weight:500;color:var(--muted);display:inline-flex;gap:6px;align-items:center;font-size:13px}
+.seg button.on{background:var(--panel);color:var(--text);box-shadow:0 0 0 1px var(--line-2)}
+.chip{padding:5px 11px;border-radius:99px;border:1px solid var(--line);color:var(--muted);font-weight:500;font-size:13px;display:inline-flex;gap:6px;align-items:center}
+.chip:hover{border-color:var(--line-2);color:var(--text)}
+.chip.on{background:var(--text);color:var(--bg);border-color:transparent}
+.chip b{font:500 11px var(--mono);opacity:.7}
+.search{margin-left:auto;display:flex;align-items:center;gap:8px;padding:6px 12px;border-radius:99px;border:1px solid var(--line);background:var(--panel-2);min-width:220px;color:var(--muted)}
+.search input{border:0;background:none;outline:0;width:100%}
+.search input::placeholder{color:var(--faint)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;animation:rise .5s cubic-bezier(.2,.7,.2,1) both}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:860px}
+th{text-align:left;font:500 10.5px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--faint);padding:11px 14px;border-bottom:1px solid var(--line);white-space:nowrap;cursor:pointer;user-select:none}
+th:hover{color:var(--text)}
+td{padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:middle;white-space:nowrap}
+tbody tr{transition:background .12s}
+tbody tr:hover{background:var(--panel-2)}
+tbody tr:last-child td{border-bottom:0}
+.co{display:flex;align-items:center;gap:10px}
+.co .av{width:30px;height:30px;border-radius:9px;font-size:11px}
+.co small{display:block;color:var(--muted);font-size:12px}
+.trunc{max-width:240px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--muted)}
+.rem{display:inline-flex;align-items:center;gap:6px;color:var(--muted);font-size:13px}
+.rem.due{color:var(--amber)}
+.acts{display:flex;gap:2px;opacity:0;transition:opacity .12s;justify-content:flex-end}
+tr:hover .acts,.acts:focus-within{opacity:1}
+.acts button{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;color:var(--muted)}
+.acts button:hover{background:var(--panel-3);color:var(--text)}
+.t-foot{display:flex;align-items:center;gap:10px;padding:10px 14px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+.t-foot .pg{margin-left:auto;display:flex;gap:4px}
+.t-foot .pg button{min-width:30px;height:30px;border-radius:8px;border:1px solid var(--line);font:500 12px var(--mono)}
+.t-foot .pg button.on{background:var(--text);color:var(--bg);border-color:transparent}
+.board{display:none;grid-template-columns:repeat(4,minmax(220px,1fr));gap:12px;padding:14px;overflow-x:auto}
+.col{background:var(--panel-2);border:1px solid var(--line);border-radius:var(--r-md);padding:10px;min-height:260px}
+.col h4{margin:2px 4px 10px;font-size:13px;font-weight:500;display:flex;align-items:center;gap:8px}
+.col h4 b{font:500 11px var(--mono);color:var(--muted);margin-left:auto}
+.kc{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:8px;cursor:grab;transition:transform .15s,border-color .15s}
+.kc:hover{transform:translateY(-2px);border-color:var(--line-2)}
+.kc strong{font-weight:500;display:block}
+.kc p{margin:4px 0 10px;color:var(--muted);font-size:13px}
+.kc footer{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:12px}
+.kc footer .av{width:22px;height:22px;font-size:9.5px;margin-left:auto}
+.mode-board .tw,.mode-board .t-foot{display:none}.mode-board .board{display:grid}
+
+/* drawer + palette */
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity .25s;z-index:40}
+.scrim.on{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:12px;right:12px;bottom:12px;width:min(480px,calc(100vw - 24px));background:var(--panel);border:1px solid var(--line-2);border-radius:var(--r-lg);box-shadow:var(--shadow);z-index:50;display:flex;flex-direction:column;transform:translateX(calc(100% + 24px));transition:transform .4s cubic-bezier(.2,.8,.2,1)}
+.drawer.on{transform:none}
+.d-head{display:flex;align-items:center;gap:10px;padding:18px 20px;border-bottom:1px solid var(--line)}
+.d-head h3{margin:0;font-size:19px;letter-spacing:-.02em;font-weight:600}
+.d-head small{display:block;color:var(--muted);font-weight:400;font-size:13px;letter-spacing:0}
+.d-head button{margin-left:auto}
+.d-body{padding:20px;overflow:auto;display:grid;gap:16px;flex:1;align-content:start}
+.fs{font:500 10.5px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-top:4px}
+.f{display:grid;gap:6px}
+.f label{font-weight:500;font-size:13px}
+.f label i{color:var(--red);font-style:normal}
+.in{width:100%;padding:10px 12px;border-radius:var(--r-sm);border:1px solid var(--line-2);background:var(--panel-2);outline:0;transition:border-color .15s,box-shadow .15s}
+.in:focus{border-color:var(--accent-text);box-shadow:0 0 0 4px var(--accent-soft)}
+.in::placeholder{color:var(--faint)}
+select.in{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%238c938d' viewBox='0 0 16 16'%3E%3Cpath d='M1.6 4.6a.5.5 0 0 1 .8 0L8 10.3l5.6-5.7a.5.5 0 0 1 .8.7l-6 6a.5.5 0 0 1-.8 0l-6-6a.5.5 0 0 1 0-.7'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.opts{display:flex;gap:6px;flex-wrap:wrap}
+.opts button{opacity:.55;transition:opacity .15s,box-shadow .15s}
+.opts button.on{opacity:1;box-shadow:0 0 0 1px currentColor}
+.drop{border:1.5px dashed var(--line-2);border-radius:var(--r-md);padding:18px;text-align:center;color:var(--muted);transition:all .15s}
+.drop:hover{border-color:var(--accent-text);background:var(--accent-soft);color:var(--text)}
+.drop i{font-size:22px;display:block;margin-bottom:4px}
+.d-foot{display:flex;gap:8px;padding:14px 20px;border-top:1px solid var(--line);align-items:center}
+.d-foot span{color:var(--muted);font-size:12.5px;margin-right:auto}
+.pal{position:fixed;left:50%;top:14vh;width:min(600px,calc(100vw - 32px));transform:translate(-50%,-10px) scale(.98);opacity:0;pointer-events:none;background:var(--panel);border:1px solid var(--line-2);border-radius:18px;box-shadow:var(--shadow);z-index:60;transition:all .2s cubic-bezier(.2,.8,.2,1);overflow:hidden}
+.pal.on{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+.pal header{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--line);color:var(--muted)}
+.pal input{flex:1;border:0;background:none;outline:0;font-size:16px}
+.pal section{padding:8px}
+.pal h5{margin:8px 10px 4px;font:500 10.5px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+.pal a{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--r-sm);color:var(--muted);font-weight:500}
+.pal a:hover,.pal a.sel{background:var(--panel-2);color:var(--text)}
+.pal a span{margin-left:auto}
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,80px);background:var(--text);color:var(--bg);padding:10px 16px;border-radius:99px;font-weight:500;z-index:70;transition:transform .35s cubic-bezier(.2,.8,.2,1);display:flex;gap:8px;align-items:center}
+.toast.on{transform:translate(-50%,0)}
+.note{font:500 11px var(--mono);color:var(--faint);text-align:center;padding:6px 0 2px}
+
+@media(max-width:1180px){.c7,.c5,.c8,.c4{grid-column:span 12}.c3{grid-column:span 6}}
+@media(max-width:860px){
+  .app{grid-template-columns:1fr}
+  .side{position:fixed;left:12px;top:12px;z-index:45;width:260px;transform:translateX(-120%);transition:transform .3s}
+  .side.open{transform:none}
+  .menu-btn{display:grid}.kbar{min-width:0;flex:1}.kbar span,.crumb,.fy{display:none}
+  .two{grid-template-columns:1fr}
+}
+@media(max-width:560px){.c3{grid-column:span 12}.page-head h2{font-size:24px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side" id="side">
+    <div class="brand"><div class="logo">K</div><b>KLENZ</b><span>FY 26–27</span></div>
+    <nav class="nav">
+      <a href="#" class="on" data-view="dash"><i class="bi bi-grid-1x2"></i>Dashboard</a>
+      <div class="nav-label">Sales</div>
+      <a href="#" data-view="enq"><i class="bi bi-chat-left-dots"></i>Enquiries<em class="hot">6</em></a>
+      <a href="#" data-view="enq"><i class="bi bi-file-earmark-ruled"></i>Quotations<em>57</em></a>
+      <a href="#" data-view="enq"><i class="bi bi-stars"></i>Positive<em>23</em></a>
+      <a href="#" data-view="enq"><i class="bi bi-kanban"></i>Projects<em>14</em></a>
+      <div class="nav-label">Tenders</div>
+      <a href="#" data-view="enq"><i class="bi bi-briefcase"></i>Consultancy</a>
+      <a href="#" data-view="enq"><i class="bi bi-file-text"></i>Tender list<em>9</em></a>
+      <a href="#" data-view="enq"><i class="bi bi-hourglass-split"></i>To be tendered<em>4</em></a>
+      <div class="nav-label">Setup</div>
+      <a href="#" data-view="enq"><i class="bi bi-calendar2-check"></i>Financial years</a>
+      <a href="#" data-view="enq"><i class="bi bi-percent"></i>GST types</a>
+      <a href="#" data-view="enq"><i class="bi bi-building"></i>Companies</a>
+    </nav>
+    <div class="me"><div class="av">SU</div><div><b>Sample User</b><small>Sales team</small></div><i class="bi bi-chevron-expand" style="margin-left:auto;color:var(--muted)"></i></div>
+  </aside>
+
+  <div class="main">
+    <header class="top">
+      <button class="icon-btn menu-btn" id="menuBtn" aria-label="Open menu"><i class="bi bi-list"></i></button>
+      <div class="crumb">KLENZ <span style="opacity:.5">/</span> <b id="crumb">Dashboard</b></div>
+      <button class="kbar" id="kbar"><i class="bi bi-search"></i><span>Search or jump to anything</span><kbd>⌘K</kbd></button>
+      <button class="pill fy"><i class="bi bi-calendar3"></i>FY 2026–27<i class="bi bi-chevron-down" style="font-size:11px;color:var(--muted)"></i></button>
+      <button class="icon-btn" id="themeBtn" aria-label="Switch theme"><i class="bi bi-sun"></i></button>
+      <button class="icon-btn" aria-label="Notifications"><i class="bi bi-bell"></i><span class="dot"></span></button>
+    </header>
+
+    <!-- DASHBOARD -->
+    <section class="view on" id="v-dash">
+      <div class="bento">
+        <div class="tile hero c7">
+          <div class="eyebrow"><span class="live"></span>Today · Wed 11 Nov</div>
+          <h1>Six follow-ups are <span class="serif">waiting</span> on you.</h1>
+          <p><b>3 quotations</b> are awaiting a reply and <b>2 tenders</b> close this week. Start with the oldest.</p>
+          <div class="row">
+            <button class="btn primary" data-open="drawer"><i class="bi bi-plus-lg"></i>New enquiry</button>
+            <button class="btn"><i class="bi bi-file-earmark-plus"></i>Add quotation</button>
+            <button class="btn ghost"><i class="bi bi-file-text"></i>Log tender</button>
+          </div>
+        </div>
+        <div class="tile c5">
+          <div class="t-head"><h3>Quoted value this financial year</h3><span class="delta" style="margin-left:auto"><i class="bi bi-arrow-up-right"></i>18%</span></div>
+          <div class="big">₹<span data-count="4.82" data-dec="2">0</span><small>Cr</small></div>
+          <svg class="spark" viewBox="0 0 400 92" preserveAspectRatio="none" aria-hidden="true">
+            <defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--accent-text)" stop-opacity=".35"/><stop offset="1" stop-color="var(--accent-text)" stop-opacity="0"/></linearGradient></defs>
+            <path d="M0 74 C30 70 45 58 70 60 S110 78 140 62 S180 30 210 40 S250 58 280 36 S330 10 360 18 S390 12 400 8 V92 H0Z" fill="url(#g)"/>
+            <path d="M0 74 C30 70 45 58 70 60 S110 78 140 62 S180 30 210 40 S250 58 280 36 S330 10 360 18 S390 12 400 8" fill="none" stroke="var(--accent-text)" stroke-width="2" vector-effect="non-scaling-stroke"/>
+          </svg>
+          <div style="display:flex;justify-content:space-between;font:500 10.5px var(--mono);color:var(--faint);margin-top:6px"><span>APR</span><span>JUN</span><span>AUG</span><span>OCT</span><span>NOV</span></div>
+        </div>
+
+        <div class="tile kpi c3"><div class="t-head"><h3>Enquiries</h3><span class="ic" style="background:var(--blue-soft);color:var(--blue)"><i class="bi bi-chat-left-dots"></i></span></div><div class="num" data-count="128">0</div><div class="bars"><i style="height:40%"></i><i style="height:55%"></i><i style="height:35%"></i><i style="height:70%"></i><i style="height:60%"></i><i style="height:85%"></i><i class="hi" style="height:100%"></i></div><div class="foot"><span class="delta"><i class="bi bi-arrow-up-right"></i>12</span>vs last month</div></div>
+        <div class="tile kpi c3"><div class="t-head"><h3>Quotations sent</h3><span class="ic" style="background:var(--violet-soft);color:var(--violet)"><i class="bi bi-file-earmark-ruled"></i></span></div><div class="num" data-count="57">0</div><div class="bars"><i style="height:50%"></i><i style="height:45%"></i><i style="height:65%"></i><i style="height:55%"></i><i style="height:80%"></i><i style="height:70%"></i><i class="hi" style="height:92%"></i></div><div class="foot"><span class="delta"><i class="bi bi-arrow-up-right"></i>5</span>vs last month</div></div>
+        <div class="tile kpi c3"><div class="t-head"><h3>Positive enquiries</h3><span class="ic" style="background:var(--accent-soft);color:var(--accent-text)"><i class="bi bi-stars"></i></span></div><div class="num" data-count="23">0</div><div class="bars"><i style="height:30%"></i><i style="height:50%"></i><i style="height:45%"></i><i style="height:40%"></i><i style="height:75%"></i><i style="height:60%"></i><i class="hi" style="height:88%"></i></div><div class="foot"><span class="delta"><i class="bi bi-arrow-up-right"></i>3</span>vs last month</div></div>
+        <div class="tile kpi c3"><div class="t-head"><h3>Projects won</h3><span class="ic" style="background:var(--amber-soft);color:var(--amber)"><i class="bi bi-trophy"></i></span></div><div class="num" data-count="14">0</div><div class="bars"><i style="height:60%"></i><i style="height:40%"></i><i style="height:70%"></i><i style="height:50%"></i><i style="height:45%"></i><i style="height:80%"></i><i class="hi" style="height:66%"></i></div><div class="foot"><span class="delta down"><i class="bi bi-arrow-down-right"></i>1</span>vs last month</div></div>
+
+        <div class="tile c5">
+          <div class="t-head"><h3>From enquiry to project</h3><a href="#">This FY<i class="bi bi-chevron-down"></i></a></div>
+          <div class="funnel">
+            <div class="f-row"><span>Enquiries</span><div class="f-track"><div class="f-fill" data-w="100">128</div></div><b>100%</b></div>
+            <div class="f-row"><span>Quoted</span><div class="f-track"><div class="f-fill" data-w="45">57</div></div><b>45%</b></div>
+            <div class="f-row"><span>Positive</span><div class="f-track"><div class="f-fill" data-w="18">23</div></div><b>18%</b></div>
+            <div class="f-row"><span>Projects</span><div class="f-track"><div class="f-fill" data-w="11">14</div></div><b>11%</b></div>
+          </div>
+        </div>
+        <div class="tile c4">
+          <div class="t-head"><h3>Follow-ups due</h3><a href="#" data-view="enq">View all<i class="bi bi-arrow-right"></i></a></div>
+          <div class="list">
+            <div class="li"><div class="date due"><span><b>11</b><small>Today</small></span></div><div><strong>Northwind Textiles</strong><small>Effluent treatment chemicals · Site visit</small></div><button class="check" aria-label="Mark done"><i class="bi bi-check-lg"></i></button></div>
+            <div class="li"><div class="date due"><span><b>11</b><small>Today</small></span></div><div><strong>Sample Foods Pvt Ltd</strong><small>Boiler water treatment · Phone call</small></div><button class="check" aria-label="Mark done"><i class="bi bi-check-lg"></i></button></div>
+            <div class="li"><div class="date"><span><b>12</b><small>Thu</small></span></div><div><strong>Demo Pharma</strong><small>Cooling tower consultancy · Head office</small></div><button class="check" aria-label="Mark done"><i class="bi bi-check-lg"></i></button></div>
+            <div class="li"><div class="date"><span><b>14</b><small>Sat</small></span></div><div><strong>Example Paper Mills</strong><small>RO antiscalant trial · Plant</small></div><button class="check" aria-label="Mark done"><i class="bi bi-check-lg"></i></button></div>
+          </div>
+        </div>
+        <div class="tile c3">
+          <div class="t-head"><h3>Tenders</h3></div>
+          <div class="ring">
+            <svg viewBox="0 0 104 104" aria-hidden="true"><circle cx="52" cy="52" r="42" fill="none" stroke="var(--panel-3)" stroke-width="12"/><circle cx="52" cy="52" r="42" fill="none" stroke="var(--accent-text)" stroke-width="12" stroke-linecap="round" stroke-dasharray="145 264" transform="rotate(-90 52 52)"/><circle cx="52" cy="52" r="42" fill="none" stroke="var(--violet)" stroke-width="12" stroke-linecap="round" stroke-dasharray="58 264" stroke-dashoffset="-158" transform="rotate(-90 52 52)"/><text x="52" y="50" text-anchor="middle" fill="var(--text)" font-size="24" font-weight="600" font-family="Geist">16</text><text x="52" y="66" text-anchor="middle" fill="var(--muted)" font-size="10" font-family="Geist Mono">TOTAL</text></svg>
+            <div class="legend" style="flex:1"><span><i style="background:var(--accent-text)"></i>Live<b>9</b></span><span><i style="background:var(--violet)"></i>Upcoming<b>4</b></span><span><i style="background:var(--panel-3)"></i>Closed<b>3</b></span></div>
+          </div>
+          <div class="li" style="margin:14px -6px -6px;background:var(--panel-2)"><div class="date"><span><b>13</b><small>Fri</small></span></div><div><strong>Municipal STP chemicals</strong><small>Closes in 2 days</small></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ENQUIRIES -->
+    <section class="view" id="v-enq">
+      <div class="page-head">
+        <div><h2>Sales <span class="serif">enquiries</span></h2><p>128 this financial year · 6 need a follow-up today</p></div>
+        <div class="sp">
+          <button class="btn"><i class="bi bi-download"></i>Export<i class="bi bi-chevron-down" style="font-size:11px"></i></button>
+          <button class="btn primary" data-open="drawer"><i class="bi bi-plus-lg"></i>New enquiry<span class="kbd" style="border-color:rgba(0,0,0,.25);color:inherit;margin-left:2px">N</span></button>
+        </div>
+      </div>
+      <div class="card" id="enqCard">
+        <div class="toolbar">
+          <div class="seg" id="modeSeg"><button class="on" data-mode="table"><i class="bi bi-table"></i>Table</button><button data-mode="board"><i class="bi bi-kanban"></i>Board</button></div>
+          <span id="chips" style="display:contents"></span>
+          <label class="search"><i class="bi bi-search"></i><input id="q" placeholder="Filter by company or enquiry" aria-label="Filter enquiries"></label>
+        </div>
+        <div class="tw"><table><thead><tr><th>Date <i class="bi bi-arrow-down"></i></th><th>Company</th><th>Enquiry</th><th>Customer</th><th>Status</th><th>Reminder</th><th>File</th><th></th></tr></thead><tbody id="rows"></tbody></table></div>
+        <div class="board" id="board"></div>
+        <div class="t-foot"><span id="count"></span><div class="pg"><button aria-label="Previous"><i class="bi bi-chevron-left"></i></button><button class="on">1</button><button>2</button><button>3</button><button aria-label="Next"><i class="bi bi-chevron-right"></i></button></div></div>
+      </div>
+    </section>
+    <div class="note">Design concept · sample data, not real figures</div>
+  </div>
+</div>
+
+<div class="scrim" id="scrim"></div>
+
+<aside class="drawer" id="drawer" aria-label="New enquiry">
+  <div class="d-head"><div><h3>New enquiry</h3><small>Saved to financial year 2026–27</small></div><button class="icon-btn" data-close aria-label="Close"><i class="bi bi-x-lg"></i></button></div>
+  <div class="d-body">
+    <div class="fs">Who and what</div>
+    <div class="f"><label>Company <i>*</i></label><select class="in"><option>Select a company</option><option>Northwind Textiles</option><option>Sample Foods Pvt Ltd</option><option>Demo Pharma</option></select></div>
+    <div class="f"><label>Enquiry details</label><textarea class="in" rows="3" placeholder="Boiler water treatment for 2 TPH boiler"></textarea></div>
+    <div class="two"><div class="f"><label>Enquiry date</label><input class="in" type="date" value="2026-11-11"></div><div class="f"><label>Referred by</label><input class="in" placeholder="Existing customer"></div></div>
+    <div class="f"><label>Customer contact</label><input class="in" placeholder="Name, phone or email"></div>
+    <div class="fs">Status</div>
+    <div class="opts" id="opts"><button class="st new on">New</button><button class="st follow">Follow up</button><button class="st quoted">Quoted</button><button class="st positive">Positive</button><button class="st lost">Lost</button></div>
+    <div class="fs">Reminder</div>
+    <div class="two"><div class="f"><label>Remind me on</label><input class="in" type="date"></div><div class="f"><label>Place</label><input class="in" placeholder="Site visit, phone call"></div></div>
+    <div class="f"><label>Attachment</label><div class="drop"><i class="bi bi-cloud-arrow-up"></i>Drop a file here or <b style="color:var(--accent-text)">browse</b></div></div>
+  </div>
+  <div class="d-foot"><span><span class="kbd" style="margin:0">Esc</span> to cancel</span><button class="btn ghost" data-close>Cancel</button><button class="btn primary" id="save"><i class="bi bi-check-lg"></i>Save enquiry</button></div>
+</aside>
+
+<div class="pal" id="pal" role="dialog" aria-label="Command palette">
+  <header><i class="bi bi-search"></i><input id="palIn" placeholder="Type a company, record or command"><span class="kbd" style="margin:0">Esc</span></header>
+  <section>
+    <h5>Create</h5>
+    <a href="#" class="sel" data-open="drawer"><i class="bi bi-plus-lg"></i>New enquiry<span class="kbd">N</span></a>
+    <a href="#"><i class="bi bi-file-earmark-plus"></i>New quotation<span class="kbd">Q</span></a>
+    <h5>Go to</h5>
+    <a href="#" data-view="dash"><i class="bi bi-grid-1x2"></i>Dashboard</a>
+    <a href="#" data-view="enq"><i class="bi bi-chat-left-dots"></i>Sales enquiries</a>
+    <a href="#" data-view="enq"><i class="bi bi-file-text"></i>Tender list</a>
+    <h5>Recent</h5>
+    <a href="#" data-view="enq"><i class="bi bi-building"></i>Northwind Textiles<span style="color:var(--faint);font-size:12.5px">Enquiry · Follow up</span></a>
+  </section>
+</div>
+
+<div class="toast" id="toast"><i class="bi bi-check-circle-fill"></i>Enquiry saved</div>
+
+<script>
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const ST={new:'New',follow:'Follow up',quoted:'Quoted',positive:'Positive',lost:'Lost'};
+const TONE=[['var(--blue-soft)','var(--blue)'],['var(--violet-soft)','var(--violet)'],['var(--amber-soft)','var(--amber)'],['var(--accent-soft)','var(--accent-text)'],['var(--red-soft)','var(--red)']];
+const DATA=[
+ {d:'11 Nov',co:'Northwind Textiles',ref:'Existing customer',e:'Effluent treatment chemicals for dyeing unit',cu:'Plant manager',s:'follow',r:'Today · Site visit',due:1,f:1},
+ {d:'10 Nov',co:'Sample Foods Pvt Ltd',ref:'Website',e:'Boiler water treatment, 2 TPH boiler',cu:'Utilities head',s:'follow',r:'Today · Phone call',due:1,f:0},
+ {d:'09 Nov',co:'Demo Pharma',ref:'Consultant',e:'Cooling tower consultancy and dosing',cu:'Engineering lead',s:'quoted',r:'12 Nov · Head office',due:0,f:1},
+ {d:'07 Nov',co:'Example Paper Mills',ref:'Trade fair',e:'RO antiscalant trial for 50 KLD plant',cu:'Purchase officer',s:'new',r:'14 Nov · Plant',due:0,f:0},
+ {d:'06 Nov',co:'Acme Dyeing Works',ref:'Existing customer',e:'Colour removal polymer, monthly supply',cu:'Owner',s:'positive',r:'—',due:0,f:1},
+ {d:'04 Nov',co:'Contoso Tanneries',ref:'Reference',e:'Sludge dewatering polyelectrolyte',cu:'ETP in-charge',s:'quoted',r:'18 Nov · Phone call',due:0,f:1},
+ {d:'02 Nov',co:'Placeholder Steels',ref:'Cold call',e:'Descaling chemical for heat exchangers',cu:'Maintenance head',s:'lost',r:'—',due:0,f:0},
+ {d:'31 Oct',co:'Test Breweries',ref:'Website',e:'CIP cleaning chemicals annual contract',cu:'QA manager',s:'new',r:'16 Nov · Site visit',due:0,f:0}
+];
+const ini=n=>n.split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase();
+let filter='all',q='';
+function shown(){return DATA.filter(x=>(filter==='all'||x.s===filter||(filter==='due'&&x.due))&&(x.co+x.e).toLowerCase().includes(q))}
+function render(){
+  const list=shown();
+  $('#rows').innerHTML=list.map((x,i)=>{const t=TONE[DATA.indexOf(x)%5];return `<tr>
+   <td class="mono" style="color:var(--muted);white-space:nowrap">${x.d}</td>
+   <td><div class="co"><div class="av" style="background:${t[0]};color:${t[1]}">${ini(x.co)}</div><div><b style="font-weight:500">${x.co}</b><small>via ${x.ref}</small></div></div></td>
+   <td><div class="trunc" title="${x.e}">${x.e}</div></td>
+   <td style="color:var(--muted)">${x.cu}</td>
+   <td><span class="st ${x.s}">${ST[x.s]}</span></td>
+   <td><span class="rem ${x.due?'due':''}">${x.r==='—'?'—':'<i class="bi bi-bell"></i>'+x.r}</span></td>
+   <td>${x.f?'<i class="bi bi-paperclip" style="color:var(--muted)"></i>':'<span style="color:var(--faint)">—</span>'}</td>
+   <td><div class="acts"><button aria-label="Edit"><i class="bi bi-pencil"></i></button><button aria-label="Details"><i class="bi bi-arrow-up-right"></i></button><button aria-label="Delete"><i class="bi bi-trash3"></i></button></div></td></tr>`}).join('')
+   ||`<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--muted)">No enquiries match. Clear the filter or add a new one.</td></tr>`;
+  $('#board').innerHTML=['new','follow','quoted','positive'].map(s=>{const c=list.filter(x=>x.s===s);return `<div class="col"><h4><span class="st ${s}">${ST[s]}</span><b>${c.length}</b></h4>${c.map(x=>`<div class="kc"><strong>${x.co}</strong><p>${x.e}</p><footer><i class="bi bi-calendar3"></i>${x.d}${x.f?'<i class="bi bi-paperclip"></i>':''}<div class="av">${ini(x.cu)}</div></footer></div>`).join('')}</div>`}).join('');
+  $('#count').textContent=`Showing ${list.length} of 128`;
+  const n=k=>DATA.filter(x=>k==='all'||x.s===k||(k==='due'&&x.due)).length;
+  $('#chips').innerHTML=[['all','All'],['due','Due today'],['new','New'],['quoted','Quoted'],['positive','Positive']].map(([k,l])=>`<button class="chip ${filter===k?'on':''}" data-f="${k}">${l}<b>${n(k)}</b></button>`).join('');
+}
+render();
+document.addEventListener('click',e=>{
+  const f=e.target.closest('[data-f]'); if(f){filter=f.dataset.f;render();return}
+  const v=e.target.closest('[data-view]'); if(v){e.preventDefault();go(v.dataset.view,v);closeAll()}
+  const o=e.target.closest('[data-open]'); if(o){e.preventDefault();closeAll();openDrawer()}
+  if(e.target.closest('[data-close]')||e.target.id==='scrim')closeAll();
+  const m=e.target.closest('#modeSeg button'); if(m){$$('#modeSeg button').forEach(b=>b.classList.toggle('on',b===m));$('#enqCard').classList.toggle('mode-board',m.dataset.mode==='board')}
+  const c=e.target.closest('.check'); if(c)c.classList.toggle('done');
+  const s=e.target.closest('#opts button'); if(s)$$('#opts button').forEach(b=>b.classList.toggle('on',b===s));
+});
+$('#q').addEventListener('input',e=>{q=e.target.value.toLowerCase();render()});
+function go(view,link){
+  $$('.view').forEach(x=>x.classList.toggle('on',x.id==='v-'+view));
+  if(link&&link.closest('.nav')){$$('.nav a').forEach(a=>a.classList.remove('on'));link.classList.add('on');$('#crumb').textContent=link.childNodes[1].textContent.trim()}
+  else{$$('.nav a').forEach((a,i)=>a.classList.toggle('on',view==='dash'?i===0:i===1));$('#crumb').textContent=view==='dash'?'Dashboard':'Enquiries'}
+  $('#side').classList.remove('open'); if(view==='dash')animate(); window.scrollTo({top:0});
+}
+function openDrawer(){$('#drawer').classList.add('on');$('#scrim').classList.add('on')}
+function openPal(){$('#pal').classList.add('on');$('#scrim').classList.add('on');setTimeout(()=>$('#palIn').focus(),50)}
+function closeAll(){$('#drawer').classList.remove('on');$('#pal').classList.remove('on');$('#scrim').classList.remove('on')}
+$('#kbar').onclick=openPal;
+$('#menuBtn').onclick=()=>$('#side').classList.toggle('open');
+$('#save').onclick=()=>{closeAll();const t=$('#toast');t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2200)};
+$('#themeBtn').onclick=()=>{const h=document.documentElement,l=h.dataset.theme==='dark';h.dataset.theme=l?'light':'dark';$('#themeBtn i').className=l?'bi bi-moon':'bi bi-sun'};
+document.addEventListener('keydown',e=>{
+  const typing=/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName);
+  if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();$('#pal').classList.contains('on')?closeAll():openPal()}
+  else if(e.key==='Escape')closeAll();
+  else if(!typing&&e.key.toLowerCase()==='n'){e.preventDefault();openDrawer()}
+});
+function animate(){
+  $$('[data-count]').forEach(el=>{const to=+el.dataset.count,dec=+(el.dataset.dec||0),t0=performance.now();
+    (function tick(t){const p=Math.min(1,(t-t0)/900),v=to*(1-Math.pow(1-p,3));el.textContent=v.toFixed(dec);if(p<1)requestAnimationFrame(tick)})(t0)});
+  $$('.f-fill').forEach(el=>{el.style.width='0';requestAnimationFrame(()=>requestAnimationFrame(()=>el.style.width=el.dataset.w+'%'))});
+}
+animate();
+</script>
+</body>
+</html>

@@ -1,451 +1,269 @@
-﻿@{
-    ViewData["Title"] = "Dashboard";
+﻿@model KLENZ.Models.DashboardViewModel
+
+@{
+    ViewData["Title"] = "Overview";
+    var attention = Model.Overdue.Count + Model.DueToday.Count;
+    var firstTab = Model.Overdue.Count > 0 && Model.DueToday.Count == 0 ? "over" : "today";
 }
 
-<style>
-    body {
-        background-color: #f8f9fa;
-        font-family: 'Poppins', sans-serif;
+@functions {
+    // Indian number style: lakh and crore
+    static string Inr(decimal value)
+    {
+        var abs = Math.Abs(value);
+        if (abs >= 10000000m) { return "₹" + (value / 10000000m).ToString("0.##") + " Cr"; }
+        if (abs >= 100000m) { return "₹" + (value / 100000m).ToString("0.##") + " L"; }
+        return "₹" + value.ToString("N0");
     }
 
-    .dashboard-card {
-        display: flex;
-        align-items: center;
-        padding: 18px;
-        border-radius: 10px;
-        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
-        background: linear-gradient(135deg, #ffffff, #f8f9fa);
-        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-        border: 1px solid #e2e8f0;
-        position: relative;
-       height:100px;
+    static string Rate(int part, int whole)
+    {
+        return whole <= 0 ? "0%" : Math.Round(part * 100.0 / whole) + "%";
     }
+}
 
-        .dashboard-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
-        }
-
-    .icon-container {
-        border-radius: 12px;
-        padding: 15px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 50px;
-        height: 50px;
-        margin-right: 15px;
-        color: #fff;
-    }
-
-    .icon-blue {
-        background: linear-gradient(135deg, #007bff, #6fb1fc);
-    }
-
-    .icon-green {
-        background: linear-gradient(135deg, #28a745, #72d472);
-    }
-
-    .icon-yellow {
-        background: linear-gradient(135deg, #ffc107, #ffdb72);
-    }
-
-    .icon-red {
-        background: linear-gradient(135deg, #dc3545, #f77b7b);
-    }
-
-    .icon-purple {
-        background: linear-gradient(135deg, #6f42c1, #a76dca);
-    }
-
-    .icon-orange {
-        background: linear-gradient(135deg, #fd7e14, #ffb74d);
-    }
-
-    .icon-gold {
-        background: linear-gradient(135deg, #ff5733, #ffa07a);
-    }
-
-    .card-title {
-        font-size: 14px;
-        color: #6c757d;
-        margin-bottom: 6px;
-        font-weight: 600;
-    }
-
-    .card-number {
-        font-size: 20px;
-        font-weight: bold;
-        color: #343a40;
-        margin: 0;
-    }
-
-    .table-card {
-        background-color: #fff;
-        border: 1px solid #dee2e6;
-        border-radius: 10px;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-    }
-
-        .table-card h5 {
-            margin-bottom: 16px;
-            color: #343a40;
-        }
-
-        .table-card .table {
-            margin-bottom: 0;
-        }
-    .dataTables_filter {
-        margin-bottom: 1rem;
-    }
-
-        .dataTables_filter label {
-            font-size: 0.9rem;
-            font-weight: 500;
-            color: #495057;
-        }
-
-        .dataTables_filter input {
-            padding: 4px 8px;
-            font-size: 0.8rem;
-            height: 28px;
-            width: 180px;
-            border: 1px solid #ced4da;
-            border-radius: 4px;
-        }
-
-    .custom-table tbody tr:hover {
-        background-color: #f1f3f5;
-        cursor: pointer;
-    }
-
-    .custom-table th {
-        background-color: #f8f9fa;
-        color: #495057;
-        font-size: 0.85rem;
-    }
-
-    .custom-table td {
-        font-size: 0.85rem;
-        color: #343a40;
-    }
-
-
-</style>
-
-@* <div class="text-center">
-    <small class="display-6">Dashboard</small>
-</div> *@
-
-<div class="container-fluid mt-3">
-    <div class="row g-3 mb-3">
-        <div class="col-md-2 col-sm-6">
-            <div class="dashboard-card d-flex p-3">
-                <div class="icon-container icon-blue">
-                    <i class="bi bi-graph-up fs-4"></i>
-                </div>
-                <div class="ms-2">
-                    <div class="card-title">Total Enquiry</div>
-                    <p class="card-number">@ViewBag.TotEnquiry</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-2 col-sm-6">
-            <div class="dashboard-card d-flex p-3">
-                <div class="icon-container icon-green">
-                    <i class="bi bi-check-circle fs-4"></i>
-                </div>
-                <div class="ms-4">
-                    <div class="card-title">Approved</div>
-                    <p class="card-number">760</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-2 col-sm-6">
-            <div class="dashboard-card d-flex p-3">
-                <div class="icon-container icon-gold">
-                    <i class="bi bi-star fs-4"></i>
-                </div>
-                <div class="ms-4">
-                    <div class="card-title">Positive</div>
-                    <p class="card-number">320</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-2 col-sm-6">
-            <div class="dashboard-card d-flex p-3">
-                <div class="icon-container icon-orange">
-                    <i class="bi bi-hourglass-split fs-4"></i>
-                </div>
-                <div class="ms-4">
-                    <div class="card-title">Pending</div>
-                    <p class="card-number">320</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-2 col-sm-6">
-            <div class="dashboard-card d-flex p-3">
-                <div class="icon-container icon-red">
-                    <i class="bi bi-x-circle fs-4"></i>
-                </div>
-                <div class="ms-4">
-                    <div class="card-title">Rejected</div>
-                    <p class="card-number">115</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-2 col-sm-6">
-            <div class="dashboard-card d-flex p-3">
-                <div class="icon-container icon-purple">
-                    <i class="bi bi-list-check fs-4"></i>
-                </div>
-                <div class="ms-4">
-                    <div class="card-title">Tender List</div>
-                    <p class="card-number">115</p>
-                </div>
-            </div>
+<div class="page-head">
+    <div class="page-title">
+        <div>
+            <h1>Overview</h1>
+            @if (Model.HasFinancialYear)
+            {
+                <p class="page-sub">Financial year @Model.FinancialYear · @Model.StartDate.ToString("d MMM yyyy") to @Model.EndDate.ToString("d MMM yyyy")</p>
+            }
         </div>
     </div>
-    <div class="row mt-4">
-        <div class="col-md-6 mb-4">
-            <div class="table-card p-3 bg-white shadow-sm">
-                <h5>Chart A</h5>
-                <div id="chartA"></div>
-            </div>
-        </div>
-        <div class="col-md-6 mb-4">
-            <div class="table-card p-3 bg-white shadow-sm">
-                <h5>Chart B</h5>
-                <div id="chartB"></div>
-            </div>
-        </div>
+    <div class="page-actions">
+        <a asp-controller="QuotationReports" asp-action="Create" class="btn"><i class="bi bi-file-earmark-plus"></i><span>New quotation</span></a>
+        <a asp-controller="SalesEnquiries" asp-action="Create" class="btn btn-primary" data-primary-action><i class="bi bi-plus-lg"></i><span>New enquiry</span></a>
     </div>
-    <div class="row mt-2">
-        <div class="col-md-6 mb-2">
-            <div class="table-card p-3 bg-white shadow-sm">
-                <h5>Approved Enquiries</h5>
-                <div class="table-responsive">
-                    <table class="table custom-table datatable">
-                        <thead>
-                            <tr>
-                                <th>Quotation Date</th>
-                                <th>Company Name</th>
-                                <th>Product Details</th>
-                                <th>Customer Details</th>
-                                <th>Value</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>01/03/2025</td>
-                                <td>ABC Ltd.</td>
-                                <td>Product X</td>
-                                <td>Customer A</td>
-                                <td>$10,000</td>
-                            </tr>
-                            <tr>
-                                <td>02/03/2025</td>
-                                <td>XYZ Corp.</td>
-                                <td>Product Y</td>
-                                <td>Customer B</td>
-                                <td>$12,500</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6 mb-2">
-            <div class="table-card p-3 bg-white shadow-sm">
-                <h5>Project List</h5>
-                <div class="table-responsive">
-                    <table class="table custom-table datatable">
-                        <thead>
-                            <tr>
-                                <th>Financial Year</th>
-                                <th>Work Order Date</th>
-                                <th>Company Name</th>
-                                <th>Customer Details</th>
-                                <th>Work Order Value</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>2024-25</td>
-                                <td>05/03/2025</td>
-                                <td>LMN Inc.</td>
-                                <td>Customer C</td>
-                                <td>$15,000</td>
-                            </tr>
-                            <tr>
-                                <td>2024-25</td>
-                                <td>06/03/2025</td>
-                                <td>PQR Solutions</td>
-                                <td>Customer D</td>
-                                <td>$8,500</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-
 </div>
 
+@if (!Model.HasFinancialYear)
+{
+    <div class="notice" role="status">
+        <i class="bi bi-calendar2-range"></i>
+        <div>
+            <strong>No active financial year</strong>
+            <p>Mark a financial year as active to see numbers here. <a asp-controller="FinancialYears" asp-action="Index">Open financial years</a></p>
+        </div>
+    </div>
+}
+else
+{
+    <div class="grid">
+        <a class="card kpi g3" asp-controller="SalesEnquiries" asp-action="Index">
+            <div class="lab">Enquiries <i class="bi bi-chat-left-text"></i></div>
+            <div class="val num">@Model.Enquiries</div>
+            <div class="sub">@(attention == 0 ? "No follow-ups due" : attention + (attention == 1 ? " follow-up needs attention" : " follow-ups need attention"))</div>
+        </a>
+        <a class="card kpi g3" asp-controller="QuotationReports" asp-action="Index">
+            <div class="lab">Quoted value <i class="bi bi-file-earmark-text"></i></div>
+            <div class="val num">@Inr(Model.QuotedValue)</div>
+            <div class="sub">@Model.Quotations @(Model.Quotations == 1 ? "quotation" : "quotations")</div>
+        </a>
+        <a class="card kpi g3" asp-controller="ProjectLists" asp-action="Index">
+            <div class="lab">Work orders <i class="bi bi-clipboard-check"></i></div>
+            <div class="val num">@Inr(Model.WonValue)</div>
+            <div class="sub">@Model.Projects @(Model.Projects == 1 ? "project" : "projects") · @Rate(Model.Projects, Model.Enquiries) of enquiries</div>
+        </a>
+        <a class="card kpi g3" asp-controller="ProjectTenderList" asp-action="Index">
+            <div class="lab">Tenders <i class="bi bi-file-ruled"></i></div>
+            <div class="val num">@Model.Tenders</div>
+            <div class="sub">@Model.UpcomingTenders to be tendered · @Model.Consultancy consultancy</div>
+        </a>
 
-<script src="~/js/custom_datatables.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-<script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/quarterOfYear.js"></script>
-<script>
-        var options = {
-            series: [
+        <section class="card g5" aria-labelledby="funnelTitle">
+            <div class="card-head"><h3 id="funnelTitle">Sales funnel</h3><small>This financial year</small></div>
+            <div class="funnel" id="funnel"
+                 data-stages='[["Enquiries",@Model.Enquiries],["Quotations",@Model.Quotations],["Positive",@Model.Positive],["Projects",@Model.Projects]]'></div>
+        </section>
+
+        <section class="card g7" aria-labelledby="chartTitle">
+            <div class="card-head">
+                <h3 id="chartTitle">Quoted and won by month</h3><small>Rupees in lakh</small>
+                <div class="sp legend"><span><i style="background:var(--accent)"></i>Quoted</span><span><i style="background:var(--line-2)"></i>Won</span></div>
+            </div>
+            <div class="chart" id="chart"></div>
+        </section>
+
+        <section class="card g5" aria-labelledby="attTitle">
+            <div class="card-head"><h3 id="attTitle">Follow-ups</h3><div class="sp"><a class="link" asp-controller="SalesEnquiries" asp-action="Index">All enquiries</a></div></div>
+            <div class="tabs" id="attTabs">
+                <button type="button" class="warn @(firstTab == "over" ? "on" : "")" data-tab="over">Overdue<b>@Model.Overdue.Count</b></button>
+                <button type="button" class="@(firstTab == "today" ? "on" : "")" data-tab="today">Today<b>@Model.DueToday.Count</b></button>
+                <button type="button" data-tab="soon">Next 7 days<b>@Model.Upcoming.Count</b></button>
+            </div>
+
+            <div class="rows" data-panel="over" hidden="@(firstTab != "over")">
+                @foreach (var r in Model.Overdue)
                 {
-                    data: [
+                    <a asp-controller="SalesEnquiries" asp-action="Details" asp-route-id="@r.Id">
+                        <span class="when over">@r.Date.ToString("dd MMM")</span>
+                        <div class="t"><strong>@r.Company</strong><small>@r.Place @(r.Place != "" && r.Details != "" ? "·" : "") @r.Details</small></div>
+                        <i class="bi bi-chevron-right" style="color:var(--faint)"></i>
+                    </a>
+                }
+                @if (Model.Overdue.Count == 0)
+                {
+                    <div class="empty"><i class="bi bi-check2-circle"></i>Nothing overdue.</div>
+                }
+            </div>
+            <div class="rows" data-panel="today" hidden="@(firstTab != "today")">
+                @foreach (var r in Model.DueToday)
+                {
+                    <a asp-controller="SalesEnquiries" asp-action="Details" asp-route-id="@r.Id">
+                        <span class="when today">Today</span>
+                        <div class="t"><strong>@r.Company</strong><small>@r.Place @(r.Place != "" && r.Details != "" ? "·" : "") @r.Details</small></div>
+                        <i class="bi bi-chevron-right" style="color:var(--faint)"></i>
+                    </a>
+                }
+                @if (Model.DueToday.Count == 0)
+                {
+                    <div class="empty"><i class="bi bi-check2-circle"></i>No follow-ups due today.</div>
+                }
+            </div>
+            <div class="rows" data-panel="soon" hidden>
+                @foreach (var r in Model.Upcoming)
+                {
+                    <a asp-controller="SalesEnquiries" asp-action="Details" asp-route-id="@r.Id">
+                        <span class="when">@r.Date.ToString("ddd dd")</span>
+                        <div class="t"><strong>@r.Company</strong><small>@r.Place @(r.Place != "" && r.Details != "" ? "·" : "") @r.Details</small></div>
+                        <i class="bi bi-chevron-right" style="color:var(--faint)"></i>
+                    </a>
+                }
+                @if (Model.Upcoming.Count == 0)
+                {
+                    <div class="empty"><i class="bi bi-calendar3"></i>Nothing scheduled for the next 7 days.</div>
+                }
+            </div>
+        </section>
+
+        <section class="card g7" aria-labelledby="recentTitle">
+            <div class="card-head"><h3 id="recentTitle">Recent enquiries</h3><div class="sp"><a class="link" asp-controller="SalesEnquiries" asp-action="Index">View all</a></div></div>
+            <div class="rows">
+                @foreach (var e in Model.RecentEnquiries)
+                {
+                    <a asp-controller="SalesEnquiries" asp-action="Details" asp-route-id="@e.Id">
+                        <span class="av">@(e.Title.Length > 1 ? e.Title.Substring(0, 2).ToUpper() : e.Title.ToUpper())</span>
+                        <div class="t"><strong>@e.Title</strong><small>@e.Subtitle</small></div>
+                        @if (e.Status != "")
                         {
-                            x: '2008',
-                            y: [2800, 4500]
-                        },
-                        {
-                            x: '2009',
-                            y: [3200, 4100]
-                        },
-                        {
-                            x: '2010',
-                            y: [2950, 7800]
-                        },
-                        {
-                            x: '2011',
-                            y: [3000, 4600]
-                        },
-                        {
-                            x: '2012',
-                            y: [3500, 4100]
-                        },
-                        {
-                            x: '2013',
-                            y: [4500, 6500]
-                        },
-                        {
-                            x: '2014',
-                            y: [4100, 5600]
+                            <span class="pill pill-gray" data-status-pill>@e.Status</span>
                         }
-                    ]
+                        <span class="when">@(e.Date.HasValue ? e.Date.Value.ToString("dd MMM") : "No date")</span>
+                    </a>
                 }
-            ],
-            chart: {
-                height: 350,
-                type: 'rangeBar',
-                zoom: {
-                    enabled: false
+                @if (Model.RecentEnquiries.Count == 0)
+                {
+                    <div class="empty"><i class="bi bi-chat-left-text"></i>No enquiries yet this year. Add the first one.</div>
                 }
-            },
-            plotOptions: {
-                bar: {
-                    isDumbbell: true,
-                    columnWidth: 5,
-                    dumbbellColors: [['#008FFB', '#00E396']]
+            </div>
+        </section>
+
+        <section class="card g6" aria-labelledby="projTitle">
+            <div class="card-head"><h3 id="projTitle">Latest work orders</h3><div class="sp"><a class="link" asp-controller="ProjectLists" asp-action="Index">View all</a></div></div>
+            <div class="rows">
+                @foreach (var p in Model.RecentProjects)
+                {
+                    <a asp-controller="ProjectLists" asp-action="Details" asp-route-id="@p.Id">
+                        <div class="t"><strong>@p.Title</strong><small>@p.Subtitle</small></div>
+                        <span class="amt num">@(p.Amount.HasValue ? Inr(p.Amount.Value) : "")</span>
+                    </a>
                 }
-            },
-            legend: {
-                show: true,
-                showForSingleSeries: true,
-                position: 'top',
-                horizontalAlign: 'left',
-                customLegendItems: ['Product A', 'Product B']
-            },
-            fill: {
-                type: 'gradient',
-                gradient: {
-                    type: 'vertical',
-                    gradientToColors: ['#00E396'],
-                    inverseColors: true,
-                    stops: [0, 100]
+                @if (Model.RecentProjects.Count == 0)
+                {
+                    <div class="empty"><i class="bi bi-clipboard-check"></i>No work orders logged yet.</div>
                 }
-            },
-            grid: {
-                xaxis: {
-                    lines: {
-                        show: true
-                    }
-                },
-                yaxis: {
-                    lines: {
-                        show: false
-                    }
+            </div>
+        </section>
+
+        <section class="card g6" aria-labelledby="tenderTitle">
+            <div class="card-head"><h3 id="tenderTitle">Latest tenders</h3><div class="sp"><a class="link" asp-controller="ProjectTenderList" asp-action="Index">View all</a></div></div>
+            <div class="rows">
+                @foreach (var t in Model.RecentTenders)
+                {
+                    <a asp-controller="ProjectTenderList" asp-action="Details" asp-route-id="@t.Id">
+                        <div class="t"><strong>@t.Title</strong><small>@t.Subtitle</small></div>
+                        <span class="amt num">@(t.Amount.HasValue ? Inr(t.Amount.Value) : "")</span>
+                    </a>
                 }
-            },
-            xaxis: {
-                tickPlacement: 'on'
+                @if (Model.RecentTenders.Count == 0)
+                {
+                    <div class="empty"><i class="bi bi-file-ruled"></i>No tenders logged yet.</div>
+                }
+            </div>
+        </section>
+    </div>
+}
+
+@section Scripts {
+    <script>
+        (function () {
+            var months = @Html.Raw(Json.Serialize(Model.Months));
+
+            // Follow-up tabs
+            var tabs = document.getElementById('attTabs');
+            if (tabs) {
+                tabs.addEventListener('click', function (e) {
+                    var b = e.target.closest('button');
+                    if (!b) { return; }
+                    tabs.querySelectorAll('button').forEach(function (x) { x.classList.toggle('on', x === b); });
+                    document.querySelectorAll('[data-panel]').forEach(function (p) { p.hidden = p.getAttribute('data-panel') !== b.getAttribute('data-tab'); });
+                });
             }
-        };
 
-    var chart = new ApexCharts(document.querySelector("#chartA"), options);
-        chart.render();
+            // Status colours on recent enquiries
+            document.querySelectorAll('[data-status-pill]').forEach(function (p) {
+                var t = p.textContent.toLowerCase(), tone = 'gray';
+                if (/positive|won|approved|confirm|complete|order/.test(t)) { tone = 'green'; }
+                else if (/lost|reject|cancel|closed|dropped/.test(t)) { tone = 'red'; }
+                else if (/follow|pending|wait|hold|progress/.test(t)) { tone = 'amber'; }
+                else if (/quot|sent|submitted|offer/.test(t)) { tone = 'violet'; }
+                else if (/new|open|enquir|received/.test(t)) { tone = 'blue'; }
+                p.className = 'pill pill-' + tone;
+            });
 
-
-        //chartb
-    dayjs.extend(window.dayjs_plugin_quarterOfYear);
-
-    // Chart B
-    var chartBOptions = {
-        series: [{
-            name: "sales",
-            data: [
-                { x: '2019/01/01', y: 400 },
-                { x: '2019/04/01', y: 430 },
-                { x: '2019/07/01', y: 448 },
-                { x: '2019/10/01', y: 470 },
-                { x: '2020/01/01', y: 540 },
-                { x: '2020/04/01', y: 580 },
-                { x: '2020/07/01', y: 690 },
-                { x: '2020/10/01', y: 690 }
-            ]
-        }],
-        chart: {
-            type: 'bar',
-            height: 380
-        },
-        xaxis: {
-            type: 'category',
-            labels: {
-                formatter: function (val) {
-                    return "Q" + dayjs(val).quarter();
-                }
-            },
-            group: {
-                style: {
-                    fontSize: '10px',
-                    fontWeight: 700
-                },
-                groups: [
-                    { title: '2019', cols: 4 },
-                    { title: '2020', cols: 4 }
-                ]
+            // Funnel
+            var funnel = document.getElementById('funnel');
+            if (funnel) {
+                var stages = JSON.parse(funnel.getAttribute('data-stages')), top = Math.max.apply(null, stages.map(function (s) { return s[1]; })) || 1;
+                funnel.innerHTML = stages.map(function (s, i) {
+                    var next = stages[i + 1], step = !next ? '' : s[1] <= 0 ? 'No data yet' : next[1] > s[1] ? 'More recorded at the next stage' : Math.round(next[1] / s[1] * 100) + '% move forward';
+                    return '<div class="fr"><b>' + s[0] + '</b><div class="ft"><div class="ff" data-w="' + (s[1] / top * 100) + '" style="opacity:' + (1 - i * 0.17) + '"></div></div><span class="n num">' + s[1] + '</span></div>' +
+                        (next ? '<div class="fr"><div class="fc">' + step + '</div></div>' : '');
+                }).join('');
+                setTimeout(function () {
+                    funnel.querySelectorAll('.ff').forEach(function (el) { el.style.width = el.getAttribute('data-w') + '%'; });
+                }, 60);
             }
-        },
-        title: {
-            text: 'Grouped Labels on the X-axis',
-        },
-        tooltip: {
-            x: {
-                formatter: function (val) {
-                    return "Q" + dayjs(val).quarter() + " " + dayjs(val).format("YYYY");
+
+            // Quoted and won by month
+            var chart = document.getElementById('chart');
+            if (chart) {
+                if (!months.length || !months.some(function (m) { return m.quoted > 0 || m.won > 0; })) {
+                    chart.innerHTML = '<div class="empty"><i class="bi bi-bar-chart-line"></i>No quotations or work orders with dates yet this year.</div>';
+                    return;
                 }
+                var lakh = function (v) { return v / 100000; };
+                var peak = Math.max.apply(null, months.map(function (m) { return Math.max(lakh(m.quoted), lakh(m.won)); }));
+                var pow = Math.pow(10, Math.floor(Math.log10(peak || 1))), max = Math.ceil(peak / pow) * pow || 1;
+                if (max / pow <= 2) { max = Math.ceil(peak / (pow / 2)) * (pow / 2); }
+                var H = 190, L = 42, W = 560, bw = (W - L) / months.length, bar = Math.min(16, bw / 2 - 3);
+                var fmt = function (v) { return v >= 100 ? Math.round(v) : Math.round(v * 10) / 10; };
+                var svg = '<svg viewBox="0 0 ' + W + ' ' + (H + 26) + '" role="img" aria-label="Quoted and won value by month">';
+                [0, 0.25, 0.5, 0.75, 1].forEach(function (f) {
+                    var y = H - f * (H - 10);
+                    svg += '<line x1="' + L + '" x2="' + W + '" y1="' + y + '" y2="' + y + '" stroke="var(--line)" stroke-width="1"/>' +
+                        '<text x="' + (L - 8) + '" y="' + (y + 4) + '" text-anchor="end" font-size="11" fill="var(--faint)">' + fmt(max * f) + '</text>';
+                });
+                months.forEach(function (m, i) {
+                    var x = L + i * bw + bw / 2, hq = lakh(m.quoted) / max * (H - 10), hw = lakh(m.won) / max * (H - 10);
+                    svg += '<rect x="' + (x - bar - 1) + '" y="' + (H - hq) + '" width="' + bar + '" height="' + hq + '" rx="3" fill="var(--accent)"><title>' + m.label + ': quoted ₹' + fmt(lakh(m.quoted)) + ' L</title></rect>' +
+                        '<rect x="' + (x + 1) + '" y="' + (H - hw) + '" width="' + bar + '" height="' + hw + '" rx="3" fill="var(--line-2)"><title>' + m.label + ': won ₹' + fmt(lakh(m.won)) + ' L</title></rect>' +
+                        '<text x="' + x + '" y="' + (H + 18) + '" text-anchor="middle" font-size="11.5" fill="var(--muted)">' + m.label + '</text>';
+                });
+                chart.innerHTML = svg + '</svg>';
             }
-        },
-    };
-
-    var chartB = new ApexCharts(document.querySelector("#chartB"), chartBOptions);
-    chartB.render();
-
+        })();
     </script>
-
+}

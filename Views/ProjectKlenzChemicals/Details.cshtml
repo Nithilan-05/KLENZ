@@ -1,0 +1,90 @@
+@model KLENZ.Models.Project_KlenzChemicals
+
+@{
+    ViewData["Title"] = "Klenz Chemicals project details";
+}
+
+<a asp-action="Index" class="back-link"><i class="bi bi-arrow-left"></i>Back to Klenz Chemicals</a>
+<div class="page-head">
+    <div class="page-title"><div><h1>Klenz Chemicals project details</h1></div></div>
+</div>
+<div class="card detail-card">
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.WorkOrderDate)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.WorkOrderDate)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.CustomerDetails)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.CustomerDetails)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.WorkDetails)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.WorkDetails)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ProjectCost)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ProjectCost)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Total)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Total)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.WorkDuration)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.WorkDuration)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Remarks)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Remarks)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.CreatedDateTime)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.CreatedDateTime)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.CreatedUserId)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.CreatedUserId)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FinancialYear)
+        </dt>
+        <dd class = "col-sm-10">
+            @(Model.FinancialYear != null ? Model.FinancialYear.FyYear : "")
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Company)
+        </dt>
+        <dd class = "col-sm-10">
+            @(Model.Company != null ? Model.Company.FullName : "")
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.GSTType)
+        </dt>
+        <dd class = "col-sm-10">
+            @(Model.GSTType != null ? Model.GSTType.Id.ToString() : "")
+        </dd>
+    </dl>
+</div>
+<div class="detail-actions">
+    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary"><i class="bi bi-pencil"></i>Edit</a>
+    <a asp-action="Index" class="btn">Back to list</a>
+</div>

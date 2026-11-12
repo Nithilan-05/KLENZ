@@ -1,6 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -10,6 +11,7 @@ using Microsoft.Extensions.Logging;
 
 namespace KLENZ.Areas.Identity.Pages.Account
 {
+    [AllowAnonymous]
     public class LoginModel : PageModel
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
@@ -97,38 +99,12 @@ namespace KLENZ.Areas.Identity.Pages.Account
             }
         }
 
-        public async Task<IActionResult> OnPostResetPasswordAsync()
+        // Passwords are reset by an administrator from Setup > Users.
+        // The old self-service reset set a fixed, publicly known password and has been removed.
+        public IActionResult OnPostResetPassword()
         {
-            if (string.IsNullOrEmpty(Input.UserName))
-            {
-                ModelState.AddModelError(string.Empty, "Username is required to reset the password.");
-                return Page();
-            }
-
-            var userFixed = await _userManager.Users
-                            .Where(u => u.NormalizedUserName == Input.UserName.Trim().ToUpper())
-                            .FirstOrDefaultAsync();
-
-            if (userFixed == null)
-            {
-                ModelState.AddModelError(string.Empty, "User not found.");
-                return Page();
-            }
-
-            string resetToken = await _userManager.GeneratePasswordResetTokenAsync(userFixed);
-            var resetResult = await _userManager.ResetPasswordAsync(userFixed, resetToken, "NewPassword@123");
-
-            if (resetResult.Succeeded)
-            {
-                TempData["SuccessMessage"] = "Password has been reset to 'NewPassword@123'. Please log in and change it.";
-                return RedirectToPage("./Login");
-            }
-
-            foreach (var error in resetResult.Errors)
-            {
-                ModelState.AddModelError(string.Empty, error.Description);
-            }
-
+            ModelState.Clear();
+            ModelState.AddModelError(string.Empty, "Ask an administrator to reset your password from Setup > Users.");
             return Page();
         }
     }
