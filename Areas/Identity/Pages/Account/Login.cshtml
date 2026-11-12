@@ -2,80 +2,57 @@
 @model LoginModel
 
 @{
-    ViewData["Title"] = "Sign In";
+    ViewData["Title"] = "Sign in";
 }
 
-<div class="auth-wrapper d-flex justify-content-center align-items-center w-100">
-    <div class="auth-card">
-        <div class="text-center">
-            <div class="auth-brand">
-                <i class="bi bi-shield-check"></i> KLENZ
-            </div>
-            <h3 class="fw-bold mb-1">Welcome Back</h3>
-            <p class="text-muted mb-4">Please sign in to access your account</p>
+<div class="auth-card">
+    <div class="auth-brand"><span class="logo">K</span>KLENZ</div>
+    <h1>Sign in</h1>
+    <p class="lead">Use your KLENZ username and password.</p>
+
+    <form id="account" method="post">
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success" role="status">@TempData["SuccessMessage"]</div>
+        }
+
+        <div class="auth-field">
+            <label asp-for="Input.UserName">Username</label>
+            <input asp-for="Input.UserName" class="form-control" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" required />
+            <span asp-validation-for="Input.UserName" class="text-danger"></span>
         </div>
 
-        <form id="account" method="post">
-            <div asp-validation-summary="ModelOnly" class="alert alert-danger p-2" role="alert"></div>
+        <div class="auth-field">
+            <label asp-for="Input.Password">Password</label>
+            <input asp-for="Input.Password" id="password" type="password" class="form-control" autocomplete="current-password" required />
+            <button type="button" class="toggle-pwd" data-toggle-pwd="password" aria-label="Show password"><i class="bi bi-eye"></i></button>
+            <span asp-validation-for="Input.Password" class="text-danger"></span>
+        </div>
 
-            <div class="auth-input-group">
-                <label asp-for="Input.UserName">Username</label>
-                <div class="auth-input-wrapper">
-                    <input asp-for="Input.UserName" class="form-control" autocomplete="username" placeholder="Enter your username" required />
-                    <i class="bi bi-person auth-input-icon"></i>
-                </div>
-                <span asp-validation-for="Input.UserName" class="text-danger small"></span>
-            </div>
+        <div class="form-check mb-2">
+            <input asp-for="Input.RememberMe" class="form-check-input" />
+            <label asp-for="Input.RememberMe" class="form-check-label">Keep me signed in on this device</label>
+        </div>
 
-            <div class="auth-input-group">
-                <label asp-for="Input.Password">Password</label>
-                <div class="auth-input-wrapper">
-                    <input asp-for="Input.Password" id="password" type="password" class="form-control" autocomplete="current-password" placeholder="Enter your password" required />
-                    <i class="bi bi-lock auth-input-icon"></i>
-                    <i id="togglePasswordIcon" class="bi bi-eye auth-toggle-pwd" onclick="togglePassword()" title="Toggle Password Visibility"></i>
-                </div>
-                <span asp-validation-for="Input.Password" class="text-danger small"></span>
-            </div>
+        <button type="submit" class="btn btn-primary">Sign in</button>
+    </form>
 
-            <button type="submit" class="w-100 btn btn-auth-primary mt-2">
-                <i class="bi bi-box-arrow-in-right me-1"></i> Sign In
-            </button>
-
-            <div class="d-flex gap-2 mt-3">
-                <button type="submit" asp-page-handler="ResetPassword" class="w-50 btn btn-auth-secondary" formnovalidate>
-                    <i class="bi bi-key me-1"></i> Reset Password
-                </button>
-                <a asp-page="./Register" class="w-50 btn btn-auth-secondary text-decoration-none">
-                    <i class="bi bi-person-plus me-1"></i> Register
-                </a>
-            </div>
-
-            @if (TempData["SuccessMessage"] != null)
-            {
-                <div class="alert alert-success mt-3 p-2 text-center">
-                    @TempData["SuccessMessage"]
-                </div>
-            }
-        </form>
-    </div>
+    <p class="auth-help">Forgot your password? Ask an administrator to reset it from Setup, then Users.</p>
 </div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>
-        function togglePassword() {
-            var passwordInput = document.getElementById("password");
-            var icon = document.getElementById("togglePasswordIcon");
-
-            if (passwordInput.type === "password") {
-                passwordInput.type = "text";
-                icon.classList.remove("bi-eye");
-                icon.classList.add("bi-eye-slash");
-            } else {
-                passwordInput.type = "password";
-                icon.classList.remove("bi-eye-slash");
-                icon.classList.add("bi-eye");
-            }
-        }
+        document.querySelectorAll('[data-toggle-pwd]').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var input = document.getElementById(btn.getAttribute('data-toggle-pwd'));
+                var show = input.type === 'password';
+                input.type = show ? 'text' : 'password';
+                btn.innerHTML = '<i class="bi bi-eye' + (show ? '-slash' : '') + '"></i>';
+                btn.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+            });
+        });
     </script>
 }

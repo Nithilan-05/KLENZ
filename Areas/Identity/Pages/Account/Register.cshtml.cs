@@ -1,4 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
@@ -21,6 +21,7 @@ using Microsoft.Extensions.Logging;
 
 namespace KLENZ.Areas.Identity.Pages.Account
 {
+    [AllowAnonymous]
     public class RegisterModel : PageModel
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
@@ -90,10 +91,45 @@ namespace KLENZ.Areas.Identity.Pages.Account
             public string ConfirmPassword { get; set; }
         }
 
-        public async Task OnGetAsync(string returnUrl = null)
+        /// <summary>True when the signed-in user is creating an account for someone else.</summary>
+        public bool CreatingForSomeoneElse { get; set; }
+
+        // New accounts can be created only when no account exists yet (first-time setup)
+        // or by a signed-in administrator. Until an administrator has been assigned,
+        // any signed-in user may create accounts so the team is never locked out.
+        private async Task<bool> CanRegisterAsync()
         {
+            if (!_userManager.Users.Any())
+            {
+                return true;
+            }
+
+            if (User.Identity?.IsAuthenticated != true)
+            {
+                return false;
+            }
+
+            var me = await _userManager.GetUserAsync(User);
+            if (me != null && me.IsAdmin == 1)
+            {
+                return true;
+            }
+
+            return !_userManager.Users.Any(u => u.IsAdmin == 1);
+        }
+
+        public async Task<IActionResult> OnGetAsync(string returnUrl = null)
+        {
+            if (!await CanRegisterAsync())
+            {
+                TempData["ErrorMessage"] = "Only an administrator can create new accounts.";
+                return RedirectToPage("./Login");
+            }
+
             ReturnUrl = returnUrl;
+            CreatingForSomeoneElse = User.Identity?.IsAuthenticated == true;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+            return Page();
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
@@ -102,9 +138,22 @@ namespace KLENZ.Areas.Identity.Pages.Account
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
+            if (!await CanRegisterAsync())
+            {
+                TempData["ErrorMessage"] = "Only an administrator can create new accounts.";
+                return RedirectToPage("./Login");
+            }
+
+            CreatingForSomeoneElse = User.Identity?.IsAuthenticated == true;
+            var isFirstAccount = !_userManager.Users.Any();
+
             if (ModelState.IsValid)
             {
                 var user = CreateUser();
+                if (isFirstAccount)
+                {
+                    user.IsAdmin = 1; // the first account administers the workspace
+                }
                 await _userStore.SetUserNameAsync(user, Input.UserName, CancellationToken.None);
 
                 if (!string.IsNullOrEmpty(Input.Email))
@@ -117,6 +166,12 @@ namespace KLENZ.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
+
+                    if (CreatingForSomeoneElse)
+                    {
+                        TempData["SuccessMessage"] = "Account created for " + Input.UserName + ".";
+                        return Redirect("/Users");
+                    }
 
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     return Redirect("/Home/Index");

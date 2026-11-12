@@ -1,32 +1,28 @@
 @model IEnumerable<KLENZ.Models.Project_ToBeTenderList>
 
 @{
-    ViewData["Title"] = "Project To Be Tender List";
+    ViewData["Title"] = "To be tendered";
 }
 
-<script src="~/js/custom_datatables.js"></script>
-
-<div class="card rounded-card shadow-lg mt-3">
-    <div class="card-header d-flex justify-content-between align-items-center bg-primary bg-opacity-75 text-white rounded-top">
-        <div class="d-flex align-items-center">
-            <i class="bi bi-hourglass-split me-2 fs-4"></i>
-            <h4 class="mb-0">Project To Be Tender List</h4>
-        </div>
-        <div class="d-flex gap-2">
-            <a asp-action="Create" class="btn btn-light text-primary shadow-sm custom-btn">
-                <i class="bi bi-plus-circle me-1"></i> Create New
-            </a>
-
-            <!-- Export Buttons -->
-            <i id="exportExcel_ProjectToBeTenderList" class="mt-1 bi bi-file-earmark-excel-fill text-success fs-4 export-icon"></i>
-            <i id="exportPdf_ProjectToBeTenderList" class="mt-1 bi bi-file-earmark-pdf-fill text-danger fs-4 export-icon"></i>
+<div class="page-head">
+    <div class="page-title">
+        <span class="page-icon"><i class="bi bi-hourglass-split"></i></span>
+        <div>
+            <h1>To be tendered</h1>
+            <p class="page-sub" data-count></p>
         </div>
     </div>
+    <div class="page-actions">
+        <button type="button" id="exportExcel_ProjectToBeTenderList" class="btn" title="Export to Excel"><i class="bi bi-file-earmark-spreadsheet"></i><span>Excel</span></button>
+        <button type="button" id="exportPdf_ProjectToBeTenderList" class="btn" title="Export to PDF"><i class="bi bi-file-earmark-pdf"></i><span>PDF</span></button>
+        <a asp-action="Create" class="btn btn-primary" data-primary-action><i class="bi bi-plus-lg"></i><span>New upcoming tender</span></a>
+    </div>
+</div>
 
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class="table datatable rounded-table align-middle">
-                <thead class="table-dark">
+<div class="card list-card">
+    <div class="table-responsive">
+        <table class="table datatable align-middle">
+            <thead>
                     <tr>
                         <th class="action-column">Actions</th>
                         <th>Financial Year</th>
@@ -76,8 +72,7 @@
                     }
                 </tbody>
             </table>
-        </div>
     </div>
 </div>
 
-<script src="~/js/pdf_excel_export.js"></script>
+<script src="~/js/Pdf_Excel_Export.js" asp-append-version="true"></script>

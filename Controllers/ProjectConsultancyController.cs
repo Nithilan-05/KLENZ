@@ -96,6 +96,12 @@ namespace KLENZ.Controllers
         public async Task<IActionResult> Create([Bind("Id,FyYear,WorkOrderDate,CompanyNameId,CustomerDetails,WorkDetails,ProjectCost" +
             ",GSTTypeId,Total,WorkDuration,Remarks,CreatedDateTime,CreatedUserId")] Project_Consultancy project_Consultancy)
         {
+            // Set on the server so nobody has to type who created the record or when
+            project_Consultancy.CreatedDateTime = DateTime.Now;
+            project_Consultancy.CreatedUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            ModelState.Remove(nameof(project_Consultancy.CreatedDateTime));
+            ModelState.Remove(nameof(project_Consultancy.CreatedUserId));
+
             if (ModelState.IsValid)
             {
                 _context.Add(project_Consultancy);

@@ -35,6 +35,7 @@ function extractTableData(excludeFirstLast = false) {
     let table = $('.datatable').DataTable(); // Get DataTable instance
 
     // Temporarily disable pagination to fetch all rows
+    var klenzPrevLen = table.page.len();
     table.page.len(-1).draw();
 
     let tableData = [];
@@ -53,7 +54,7 @@ function extractTableData(excludeFirstLast = false) {
     });
 
     // Restore pagination settings
-    table.page.len(5).draw(); // Set back to 5 or your preferred number
+    table.page.len(klenzPrevLen).draw(); // Set back to 5 or your preferred number
 
     return tableData;
 }
@@ -76,6 +77,7 @@ function exportToExcel(headers, fileName) {
     });
 
     let table = $('.datatable').DataTable();
+    var klenzPrevLen = table.page.len();
     table.page.len(-1).draw(); // Fetch all rows
 
     let rowIndex = 1;
@@ -101,7 +103,7 @@ function exportToExcel(headers, fileName) {
         rowIndex++;
     });
 
-    table.page.len(5).draw(); // Restore pagination
+    table.page.len(klenzPrevLen).draw(); // Restore pagination
 
     worksheet.columns.forEach((column, index) => {
         column.width = index === 0 ? 8 : 20;
@@ -250,6 +252,26 @@ document.addEventListener("DOMContentLoaded", function () {
         excelButton_projToBeTender.addEventListener('click', function () {
             const headers = ["S.No", "F.Y", "Work Order date", "Company Details	", "Customer", "Work Details", "Project Cost", "GST", "Total", "Work duration", "Remarks"];
             exportToExcel(headers, "Project To Be Tender List.xlsx");
+        });
+    }
+
+    // Klenz Chemicals
+
+    const pdfButton_klenzChem = document.getElementById('exportPdf_ProjectKlenzChemicals');
+    if (pdfButton_klenzChem) {
+        pdfButton_klenzChem.addEventListener('click', function () {
+            const headers = ["S.No", "F.Y", "Work Order date", "Company Details", "Customer", "Work Details", "Project Cost", "GST", "Total", "Work duration", "Remarks"];
+            const columnWidths = [12, 23, 20, 50, 50, 20, 25, 12, 20, 18, 20];
+            const data = extractTableData(true);
+            exportToPDF(headers, data, columnWidths, "Klenz Chemicals Projects.pdf");
+        });
+    }
+
+    const excelButton_klenzChem = document.getElementById('exportExcel_ProjectKlenzChemicals');
+    if (excelButton_klenzChem) {
+        excelButton_klenzChem.addEventListener('click', function () {
+            const headers = ["S.No", "F.Y", "Work Order date", "Company Details", "Customer", "Work Details", "Project Cost", "GST", "Total", "Work duration", "Remarks"];
+            exportToExcel(headers, "Klenz Chemicals Projects.xlsx");
         });
     }
 });

@@ -1,14 +1,14 @@
-﻿@model KLENZ.Models.Project_Consultancy
+@model KLENZ.Models.Project_Consultancy
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Consultancy project details";
 }
 
-<h1>Details</h1>
-
-<div>
-    <h4>Project_Consultancy</h4>
-    <hr />
+<a asp-action="Index" class="back-link"><i class="bi bi-arrow-left"></i>Back to consultancy</a>
+<div class="page-head">
+    <div class="page-title"><div><h1>Consultancy project details</h1></div></div>
+</div>
+<div class="card detail-card">
     <dl class="row">
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.WorkOrderDate)
@@ -84,7 +84,7 @@
         </dd>
     </dl>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+<div class="detail-actions">
+    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary"><i class="bi bi-pencil"></i>Edit</a>
+    <a asp-action="Index" class="btn">Back to list</a>
 </div>

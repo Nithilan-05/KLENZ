@@ -1,28 +1,26 @@
 @model IEnumerable<KLENZ.Models.GSTTypes>
 
 @{
-    ViewData["Title"] = "GST Types";
+    ViewData["Title"] = "GST types";
 }
 
-<script src="~/js/custom_datatables.js"></script>
-
-<div class="card rounded-card shadow-lg mt-3">
-    <div class="card-header d-flex justify-content-between align-items-center bg-primary bg-opacity-75 text-white rounded-top">
-        <div class="d-flex align-items-center">
-            <i class="bi bi-percent me-2 fs-4"></i>
-            <h4 class="mb-0">GST Types</h4>
-        </div>
-        <div class="d-flex gap-2">
-            <a asp-action="Create" class="btn btn-light text-primary shadow-sm custom-btn">
-                <i class="bi bi-plus-circle me-1"></i> Create New
-            </a>
+<div class="page-head">
+    <div class="page-title">
+        <span class="page-icon"><i class="bi bi-percent"></i></span>
+        <div>
+            <h1>GST types</h1>
+            <p class="page-sub" data-count></p>
         </div>
     </div>
+    <div class="page-actions">
+        <a asp-action="Create" class="btn btn-primary" data-primary-action><i class="bi bi-plus-lg"></i><span>New GST type</span></a>
+    </div>
+</div>
 
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class="table datatable rounded-table align-middle">
-                <thead class="table-dark">
+<div class="card list-card">
+    <div class="table-responsive">
+        <table class="table datatable align-middle">
+            <thead>
                     <tr>
                         <th class="action-column">Actions</th>
                         <th>GST Type (%)</th>
@@ -54,6 +52,5 @@
                     }
                 </tbody>
             </table>
-        </div>
     </div>
 </div>

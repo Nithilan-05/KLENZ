@@ -1,0 +1,100 @@
+@model IEnumerable<ApplicationUser>
+
+@{
+    ViewData["Title"] = "Users";
+    bool canManage = ViewBag.CanManage == true;
+    string currentUserId = ViewBag.CurrentUserId as string ?? "";
+}
+
+<div class="page-head">
+    <div class="page-title">
+        <span class="page-icon"><i class="bi bi-people"></i></span>
+        <div>
+            <h1>Users</h1>
+            <p class="page-sub" data-count></p>
+        </div>
+    </div>
+    <div class="page-actions">
+        @if (canManage)
+        {
+            <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-primary" data-primary-action>
+                <i class="bi bi-plus-lg"></i><span>New user</span>
+            </a>
+        }
+    </div>
+</div>
+
+@if (TempData["TemporaryPassword"] != null)
+{
+    <div class="notice notice-success" role="status">
+        <i class="bi bi-key"></i>
+        <div>
+            <strong>Temporary password for @TempData["TemporaryPasswordUser"]</strong>
+            <p>Share it with them privately. It is shown only once, and they should change it after signing in.</p>
+            <code class="secret">@TempData["TemporaryPassword"]</code>
+        </div>
+    </div>
+}
+
+@if (!canManage)
+{
+    <div class="notice" role="status">
+        <i class="bi bi-info-circle"></i>
+        <div><strong>View only</strong><p>Ask an administrator to add users or reset a password.</p></div>
+    </div>
+}
+
+<div class="card list-card">
+    <div class="table-responsive">
+        <table class="table datatable align-middle">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Role</th>
+                    @if (canManage)
+                    {
+                        <th class="action-column">Actions</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td><strong>@item.UserName</strong>@(item.Id == currentUserId ? " (you)" : "")</td>
+                        <td>@item.Email</td>
+                        <td>@item.PhoneNumber</td>
+                        <td>
+                            @if (item.IsAdmin == 1)
+                            {
+                                <span class="pill pill-green">Administrator</span>
+                            }
+                            else
+                            {
+                                <span class="pill pill-gray">Member</span>
+                            }
+                        </td>
+                        @if (canManage)
+                        {
+                            <td class="action-column">
+                                <div class="row-actions">
+                                    <form asp-action="ToggleAdmin" asp-route-id="@item.Id" method="post">
+                                        <button type="submit" class="btn btn-sm btn-ghost">
+                                            @(item.IsAdmin == 1 ? "Remove admin" : "Make admin")
+                                        </button>
+                                    </form>
+                                    <form asp-action="ResetPassword" asp-route-id="@item.Id" method="post"
+                                          data-confirm="Reset the password for @(item.UserName)? Their current password will stop working.">
+                                        <button type="submit" class="btn btn-sm btn-ghost">Reset password</button>
+                                    </form>
+                                </div>
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

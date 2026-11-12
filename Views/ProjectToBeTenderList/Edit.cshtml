@@ -1,15 +1,15 @@
-﻿@model KLENZ.Models.Project_ToBeTenderList
+@model KLENZ.Models.Project_ToBeTenderList
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit upcoming tender";
 }
 
-<h1>Edit</h1>
-
-<h4>Project_ToBeTenderList</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
+<a asp-action="Index" class="back-link"><i class="bi bi-arrow-left"></i>Back to upcoming tenders</a>
+<div class="page-head">
+    <div class="page-title"><div><h1>Edit upcoming tender</h1></div></div>
+</div>
+<div class="card form-card">
+    <div class="card-body">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
@@ -63,26 +63,16 @@
                 <input asp-for="Remarks" class="form-control" />
                 <span asp-validation-for="Remarks" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="CreatedDateTime" class="control-label"></label>
-                <input asp-for="CreatedDateTime" class="form-control" />
-                <span asp-validation-for="CreatedDateTime" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreatedUserId" class="control-label"></label>
-                <input asp-for="CreatedUserId" class="form-control" />
-                <span asp-validation-for="CreatedUserId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+            <input type="hidden" asp-for="CreatedDateTime" />
+            <input type="hidden" asp-for="CreatedUserId" />
+            <div class="form-actions">
+                <a asp-action="Index" class="btn">Cancel</a>
+                <button type="submit" class="btn btn-primary">Save</button>
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

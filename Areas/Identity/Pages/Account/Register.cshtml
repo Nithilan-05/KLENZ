@@ -1,88 +1,77 @@
 @page
 @model RegisterModel
 @{
-    ViewData["Title"] = "Create Account";
+    ViewData["Title"] = Model.CreatingForSomeoneElse ? "New user" : "Create account";
 }
 
-<div class="auth-wrapper d-flex justify-content-center align-items-center w-100">
-    <div class="auth-card register-card">
-        <div class="text-center">
-            <div class="auth-brand">
-                <i class="bi bi-shield-check"></i> KLENZ
-            </div>
-            <h3 class="fw-bold mb-1">Create Account</h3>
-            <p class="text-muted mb-4">Enter your details to register a new account</p>
+@if (Model.CreatingForSomeoneElse)
+{
+    <a asp-area="" asp-controller="Users" asp-action="Index" class="back-link"><i class="bi bi-arrow-left"></i>Back to users</a>
+}
+
+<div class="auth-card">
+    @if (!Model.CreatingForSomeoneElse)
+    {
+        <div class="auth-brand"><span class="logo">K</span>KLENZ</div>
+    }
+    <h1>@(Model.CreatingForSomeoneElse ? "New user" : "Create the first account")</h1>
+    <p class="lead">
+        @(Model.CreatingForSomeoneElse
+            ? "Create a sign-in for a colleague, then share the password with them privately."
+            : "This account becomes the administrator and can add everyone else.")
+    </p>
+
+    <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+        <div class="auth-field">
+            <label asp-for="Input.UserName">Username</label>
+            <input asp-for="Input.UserName" class="form-control" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" required />
+            <span asp-validation-for="Input.UserName" class="text-danger"></span>
         </div>
 
-        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-            <div asp-validation-summary="ModelOnly" class="alert alert-danger p-2" role="alert"></div>
+        <div class="auth-field">
+            <label asp-for="Input.Email">Email (optional)</label>
+            <input asp-for="Input.Email" class="form-control" autocomplete="off" placeholder="name@company.com" />
+            <span asp-validation-for="Input.Email" class="text-danger"></span>
+        </div>
 
-            <div class="auth-input-group">
-                <label asp-for="Input.UserName">Username</label>
-                <div class="auth-input-wrapper">
-                    <input asp-for="Input.UserName" class="form-control" autocomplete="username" aria-required="true" placeholder="Enter your username" required />
-                    <i class="bi bi-person auth-input-icon"></i>
-                </div>
-                <span asp-validation-for="Input.UserName" class="text-danger small"></span>
-            </div>
+        <div class="auth-field">
+            <label asp-for="Input.Password">Password</label>
+            <input asp-for="Input.Password" id="registerPassword" type="password" class="form-control" autocomplete="new-password" required />
+            <button type="button" class="toggle-pwd" data-toggle-pwd="registerPassword" aria-label="Show password"><i class="bi bi-eye"></i></button>
+            <span asp-validation-for="Input.Password" class="text-danger"></span>
+        </div>
 
-            <div class="auth-input-group">
-                <label asp-for="Input.Email">Email (Optional)</label>
-                <div class="auth-input-wrapper">
-                    <input asp-for="Input.Email" class="form-control" autocomplete="email" aria-required="false" placeholder="name@example.com" />
-                    <i class="bi bi-envelope auth-input-icon"></i>
-                </div>
-                <span asp-validation-for="Input.Email" class="text-danger small"></span>
-            </div>
+        <div class="auth-field">
+            <label asp-for="Input.ConfirmPassword">Confirm password</label>
+            <input asp-for="Input.ConfirmPassword" id="confirmPassword" type="password" class="form-control" autocomplete="new-password" required />
+            <button type="button" class="toggle-pwd" data-toggle-pwd="confirmPassword" aria-label="Show password"><i class="bi bi-eye"></i></button>
+            <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+        </div>
 
-            <div class="auth-input-group">
-                <label asp-for="Input.Password">Password</label>
-                <div class="auth-input-wrapper">
-                    <input asp-for="Input.Password" id="registerPassword" type="password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="Create a password" required />
-                    <i class="bi bi-lock auth-input-icon"></i>
-                    <i id="toggleRegPasswordIcon" class="bi bi-eye auth-toggle-pwd" onclick="toggleRegPassword('registerPassword', 'toggleRegPasswordIcon')" title="Toggle Password Visibility"></i>
-                </div>
-                <span asp-validation-for="Input.Password" class="text-danger small"></span>
-            </div>
+        <p class="auth-help" style="text-align:left;margin:0 0 12px">At least 8 characters, with upper and lower case letters, a number and a symbol.</p>
 
-            <div class="auth-input-group">
-                <label asp-for="Input.ConfirmPassword">Confirm Password</label>
-                <div class="auth-input-wrapper">
-                    <input asp-for="Input.ConfirmPassword" id="confirmPassword" type="password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="Confirm your password" required />
-                    <i class="bi bi-shield-lock auth-input-icon"></i>
-                    <i id="toggleConfirmPasswordIcon" class="bi bi-eye auth-toggle-pwd" onclick="toggleRegPassword('confirmPassword', 'toggleConfirmPasswordIcon')" title="Toggle Password Visibility"></i>
-                </div>
-                <span asp-validation-for="Input.ConfirmPassword" class="text-danger small"></span>
-            </div>
+        <button id="registerSubmit" type="submit" class="btn btn-primary">@(Model.CreatingForSomeoneElse ? "Create user" : "Create account")</button>
+    </form>
 
-            <button id="registerSubmit" type="submit" class="w-100 btn btn-auth-primary mt-2">
-                <i class="bi bi-check-circle me-1"></i> Register Account
-            </button>
-
-            <div class="text-center mt-3">
-                <span class="text-muted">Already have an account? </span>
-                <a asp-page="./Login" class="fw-bold text-primary text-decoration-none ms-1">Sign In</a>
-            </div>
-        </form>
-    </div>
+    @if (!Model.CreatingForSomeoneElse)
+    {
+        <p class="auth-help">Already have an account? <a asp-page="./Login">Sign in</a></p>
+    }
 </div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>
-        function toggleRegPassword(inputId, iconId) {
-            var passwordInput = document.getElementById(inputId);
-            var icon = document.getElementById(iconId);
-
-            if (passwordInput.type === "password") {
-                passwordInput.type = "text";
-                icon.classList.remove("bi-eye");
-                icon.classList.add("bi-eye-slash");
-            } else {
-                passwordInput.type = "password";
-                icon.classList.remove("bi-eye-slash");
-                icon.classList.add("bi-eye");
-            }
-        }
+        document.querySelectorAll('[data-toggle-pwd]').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var input = document.getElementById(btn.getAttribute('data-toggle-pwd'));
+                var show = input.type === 'password';
+                input.type = show ? 'text' : 'password';
+                btn.innerHTML = '<i class="bi bi-eye' + (show ? '-slash' : '') + '"></i>';
+                btn.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+            });
+        });
     </script>
 }

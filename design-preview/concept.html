@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KLENZ — design concept v2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<style>
+:root{
+  --bg:#f4f5f7; --surface:#fff; --surface-2:#f8f9fb; --surface-3:#eef0f3;
+  --line:#e4e7ec; --line-2:#cfd4dc; --text:#0f1728; --muted:#5a6474; --faint:#98a1b0;
+  --accent:#0f766e; --accent-hover:#0b5f59; --accent-ink:#fff; --accent-text:#0f766e; --accent-soft:#e3f3f0;
+  --side:#0c131f; --side-line:rgba(255,255,255,.08); --side-text:#c5cedb; --side-muted:#748095; --side-hover:rgba(255,255,255,.06); --side-on:rgba(255,255,255,.1);
+  --blue:#1d4ed8; --blue-soft:#e8f0ff; --amber:#b45309; --amber-soft:#fff3dd; --violet:#6d28d9; --violet-soft:#f0eaff;
+  --green:#15803d; --green-soft:#e5f6ea; --red:#b42318; --red-soft:#fdebe9; --gray-soft:#eef0f3;
+  --shadow-sm:0 1px 2px rgba(16,24,40,.05); --shadow-lg:0 20px 48px -12px rgba(16,24,40,.22);
+  --r:10px; --r-sm:8px;
+}
+[data-theme="dark"]{
+  --bg:#0a0e14; --surface:#111720; --surface-2:#151c27; --surface-3:#1b2431;
+  --line:#212b39; --line-2:#313d4f; --text:#e8ecf2; --muted:#95a1b3; --faint:#5f6c80;
+  --accent:#2bb5a3; --accent-hover:#3cc7b5; --accent-ink:#04211d; --accent-text:#4fd1bf; --accent-soft:rgba(43,181,163,.14);
+  --side:#070a0f; --side-line:rgba(255,255,255,.07);
+  --blue:#8ab4ff; --blue-soft:rgba(138,180,255,.13); --amber:#f2b657; --amber-soft:rgba(242,182,87,.13); --violet:#b9a2ff; --violet-soft:rgba(185,162,255,.14);
+  --green:#5fd38a; --green-soft:rgba(95,211,138,.13); --red:#ff8a7a; --red-soft:rgba(255,138,122,.13); --gray-soft:#1b2431;
+  --shadow-sm:none; --shadow-lg:0 24px 60px -16px rgba(0,0,0,.7);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;-webkit-font-smoothing:antialiased;font-feature-settings:"cv11","ss01"}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0}
+input,select,textarea{font:inherit;color:inherit}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--accent-text);outline-offset:2px;border-radius:6px}
+.num{font-variant-numeric:tabular-nums}
+h1,h2,h3,h4,p{margin:0}
+
+.app{display:grid;grid-template-columns:240px minmax(0,1fr);min-height:100vh}
+.side{position:sticky;top:0;height:100vh;background:var(--side);color:var(--side-text);display:flex;flex-direction:column;border-right:1px solid var(--side-line);overflow:auto}
+.brand{display:flex;align-items:center;gap:10px;padding:16px 16px 14px;border-bottom:1px solid var(--side-line)}
+.logo{width:30px;height:30px;border-radius:8px;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-weight:700;font-size:15px}
+.brand b{color:#fff;font-size:15px;letter-spacing:.08em;font-weight:600;display:block;line-height:1.2}
+.brand small{color:var(--side-muted);font-size:11.5px}
+.nav{padding:10px 8px;flex:1}
+.nav-label{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--side-muted);padding:14px 10px 6px}
+.nav a{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:var(--r-sm);font-weight:500;font-size:13.5px;margin-bottom:1px}
+.nav a i{font-size:15px;opacity:.85}
+.nav a:hover{background:var(--side-hover);color:#fff}
+.nav a.on{background:var(--side-on);color:#fff}
+.nav a em{margin-left:auto;font-style:normal;font-size:11.5px;color:var(--side-muted);font-variant-numeric:tabular-nums}
+.nav a em.hot{background:var(--accent);color:var(--accent-ink);border-radius:99px;padding:0 7px;font-weight:600}
+.me{display:flex;align-items:center;gap:10px;padding:12px 14px;border-top:1px solid var(--side-line)}
+.me b{color:#fff;font-weight:500;font-size:13px;display:block;line-height:1.3}.me small{color:var(--side-muted);font-size:12px}
+.av{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-weight:600;font-size:11px;background:var(--accent-soft);color:var(--accent-text);flex:none}
+.side .av{background:rgba(255,255,255,.12);color:#fff}
+
+.main{min-width:0}
+.top{position:sticky;top:0;z-index:20;height:56px;display:flex;align-items:center;gap:10px;padding:0 24px;background:var(--surface);border-bottom:1px solid var(--line)}
+.crumb{color:var(--muted);font-size:13.5px;white-space:nowrap}.crumb b{color:var(--text);font-weight:500}
+.kbar{margin-left:auto;display:flex;align-items:center;gap:8px;width:300px;height:34px;padding:0 10px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--surface-2);color:var(--faint);font-size:13.5px}
+.kbar:hover{border-color:var(--line-2)}
+.kbar span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+kbd{margin-left:auto;font:500 11px 'Inter';border:1px solid var(--line-2);border-radius:5px;padding:0 5px;color:var(--muted);background:var(--surface)}
+.tb{height:34px;display:inline-flex;align-items:center;gap:7px;padding:0 10px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--surface);font-weight:500;font-size:13px;white-space:nowrap;position:relative}
+.tb:hover{background:var(--surface-2);border-color:var(--line-2)}
+.tb.sq{width:34px;justify-content:center;padding:0}
+.tb .dot{position:absolute;top:6px;right:7px;width:7px;height:7px;border-radius:50%;background:var(--red);border:1.5px solid var(--surface)}
+.sw{width:26px;height:15px;border-radius:99px;background:var(--line-2);position:relative;transition:background .15s}
+.sw::after{content:"";position:absolute;top:2px;left:2px;width:11px;height:11px;border-radius:50%;background:#fff;transition:transform .15s}
+.show-new .sw{background:var(--violet)}.show-new .sw::after{transform:translateX(11px)}
+.menu-btn{display:none}
+.content{padding:24px 28px 40px;max-width:1440px}
+
+.btn{height:34px;display:inline-flex;align-items:center;gap:7px;padding:0 12px;border-radius:var(--r-sm);font-weight:500;font-size:13.5px;border:1px solid var(--line-2);background:var(--surface);box-shadow:var(--shadow-sm);white-space:nowrap;transition:background .12s,border-color .12s}
+.btn:hover{background:var(--surface-2)}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.primary:hover{background:var(--accent-hover);border-color:var(--accent-hover)}
+.btn.quiet{border-color:transparent;box-shadow:none;background:none;color:var(--muted)}
+.btn.quiet:hover{background:var(--surface-3);color:var(--text)}
+.btn.danger{color:var(--red)}
+
+.view{display:none}.view.on{display:block;animation:fade .25s ease both}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.ph{display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.ph h1{font-size:22px;font-weight:600;letter-spacing:-.02em;line-height:1.25}
+.ph p{color:var(--muted);font-size:13.5px;margin-top:2px}
+.ph .sp{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.seg{display:inline-flex;border:1px solid var(--line-2);border-radius:var(--r-sm);overflow:hidden;background:var(--surface);box-shadow:var(--shadow-sm)}
+.seg button{height:32px;padding:0 12px;font-weight:500;font-size:13px;color:var(--muted);display:inline-flex;align-items:center;gap:6px;border-right:1px solid var(--line)}
+.seg button:last-child{border-right:0}
+.seg button.on{background:var(--surface-3);color:var(--text)}
+
+.grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:16px}
+.c3{grid-column:span 3}.c4{grid-column:span 4}.c5{grid-column:span 5}.c7{grid-column:span 7}.c8{grid-column:span 8}.c12{grid-column:span 12}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow-sm);position:relative}
+.card.pad{padding:16px 18px}
+.ch{display:flex;align-items:center;gap:8px;padding:14px 18px;border-bottom:1px solid var(--line)}
+.ch h3{font-size:14px;font-weight:600}
+.ch small{color:var(--muted);font-size:12.5px}
+.ch .sp{margin-left:auto;display:flex;gap:6px;align-items:center}
+.link{color:var(--accent-text);font-weight:500;font-size:13px}
+.link:hover{text-decoration:underline}
+.kpi .lab{color:var(--muted);font-size:13px;font-weight:500;display:flex;align-items:center;gap:6px}
+.kpi .val{font-size:26px;font-weight:600;letter-spacing:-.025em;margin-top:6px;line-height:1.15}
+.kpi .val small{font-size:14px;color:var(--muted);font-weight:500;letter-spacing:0;margin-left:3px}
+.kpi .row{display:flex;align-items:flex-end;gap:10px;margin-top:10px}
+.kpi .row span{color:var(--muted);font-size:12.5px;white-space:nowrap}
+.kpi svg{margin-left:auto;width:84px;height:30px}
+.delta{white-space:nowrap;display:inline-flex;align-items:center;gap:2px;font-size:12px;font-weight:600;padding:1px 6px;border-radius:5px;background:var(--green-soft);color:var(--green)}
+.delta.down{background:var(--red-soft);color:var(--red)}
+.fn{padding:16px 18px;display:grid;gap:4px}
+.fr{display:grid;grid-template-columns:100px minmax(0,1fr) 56px;align-items:center;gap:12px;font-size:13.5px}
+.fr b{font-weight:500}
+.ft{height:28px;background:var(--surface-3);border-radius:6px;overflow:hidden}
+.ff{height:100%;background:var(--accent);border-radius:6px;width:0;transition:width .9s cubic-bezier(.2,.7,.2,1)}
+.fr .n{text-align:right;font-weight:600}
+.fc{grid-column:2;font-size:12px;color:var(--muted);padding:1px 0 5px;display:flex;align-items:center;gap:5px}
+.chart{padding:14px 18px 12px}
+.chart svg{width:100%;height:auto;display:block}
+.lg{display:flex;gap:14px;font-size:12.5px;color:var(--muted)}.lg i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:6px}
+.tabs{display:flex;gap:2px;padding:0 12px;border-bottom:1px solid var(--line)}
+.tabs button{padding:10px 8px;font-weight:500;font-size:13px;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px;display:inline-flex;gap:6px;align-items:center}
+.tabs button.on{color:var(--text);border-color:var(--accent-text)}
+.tabs button b{font-size:11.5px;font-weight:600;background:var(--surface-3);border-radius:99px;padding:0 6px;color:var(--muted)}
+.tabs button.warn b{background:var(--red-soft);color:var(--red)}
+.rows>div{display:flex;align-items:center;gap:12px;padding:10px 18px;border-bottom:1px solid var(--line)}
+.rows>div:last-child{border-bottom:0}
+.rows>div:hover{background:var(--surface-2)}
+.rows .t{min-width:0;flex:1}
+.rows strong{display:block;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rows small{display:block;color:var(--muted);font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.when{font-size:12px;font-weight:600;padding:2px 7px;border-radius:5px;background:var(--gray-soft);color:var(--muted);white-space:nowrap}
+.when.over{background:var(--red-soft);color:var(--red)}.when.today{background:var(--amber-soft);color:var(--amber)}
+.ib{width:28px;height:28px;border-radius:6px;display:grid;place-items:center;color:var(--muted);flex:none}
+.ib:hover{background:var(--surface-3);color:var(--text)}
+.ib.done{background:var(--green-soft);color:var(--green)}
+.ico{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;flex:none;background:var(--surface-3);color:var(--muted);font-size:14px}
+
+.st{display:inline-flex;align-items:center;gap:6px;padding:2px 8px;border-radius:6px;font-size:12.5px;font-weight:500;white-space:nowrap}
+.st::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.st.new{background:var(--blue-soft);color:var(--blue)}.st.follow{background:var(--amber-soft);color:var(--amber)}
+.st.quoted{background:var(--violet-soft);color:var(--violet)}.st.positive{background:var(--green-soft);color:var(--green)}.st.lost{background:var(--red-soft);color:var(--red)}
+.bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 14px;border-bottom:1px solid var(--line)}
+.fsel{height:32px;border:1px solid var(--line-2);border-radius:var(--r-sm);background:var(--surface);padding:0 28px 0 10px;font-weight:500;font-size:13px;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='%237a8494' viewBox='0 0 16 16'%3E%3Cpath d='M1.6 4.6a.5.5 0 0 1 .8 0L8 10.3l5.6-5.7a.5.5 0 0 1 .8.7l-6 6a.5.5 0 0 1-.8 0l-6-6a.5.5 0 0 1 0-.7'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center}
+.search{margin-left:auto;display:flex;align-items:center;gap:8px;height:32px;padding:0 10px;border-radius:var(--r-sm);border:1px solid var(--line-2);background:var(--surface);min-width:230px;color:var(--faint)}
+.search input{border:0;background:none;outline:0;width:100%;font-size:13.5px}
+.search:focus-within{border-color:var(--accent-text);box-shadow:0 0 0 3px var(--accent-soft)}
+.bulk{display:none;align-items:center;gap:8px;padding:8px 14px;background:var(--accent-soft);border-bottom:1px solid var(--line);font-weight:500;font-size:13.5px}
+.bulk.on{display:flex}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:900px}
+th{text-align:left;font-size:12px;font-weight:600;color:var(--muted);padding:9px 14px;background:var(--surface-2);border-bottom:1px solid var(--line);white-space:nowrap;user-select:none}
+th.s{cursor:pointer}th.s:hover{color:var(--text)}th i{font-size:11px;margin-left:3px}
+td{padding:9px 14px;border-bottom:1px solid var(--line);white-space:nowrap;vertical-align:middle}
+tbody tr{cursor:pointer}tbody tr:hover{background:var(--surface-2)}tbody tr.sel{background:var(--accent-soft)}
+tbody tr:last-child td{border-bottom:0}
+.ck{width:16px;height:16px;accent-color:var(--accent);cursor:pointer;vertical-align:middle}
+.co{display:flex;align-items:center;gap:10px}.co .av{width:28px;height:28px;border-radius:7px;font-size:10.5px}
+.co b{font-weight:500;display:block;line-height:1.3}.co small{color:var(--muted);font-size:12px}
+.tr{max-width:250px;overflow:hidden;text-overflow:ellipsis;color:var(--muted)}
+.id{color:var(--muted);font-size:12.5px}
+.acts{display:flex;gap:2px;justify-content:flex-end;opacity:0}tr:hover .acts,.acts:focus-within{opacity:1}
+.tf{display:flex;align-items:center;gap:10px;padding:10px 14px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+.tf .pg{margin-left:auto;display:flex;gap:4px;align-items:center}
+.tf .pg button{min-width:30px;height:30px;border-radius:6px;border:1px solid var(--line);font-size:12.5px;font-weight:500;background:var(--surface)}
+.tf .pg button.on{background:var(--accent-soft);color:var(--accent-text);border-color:transparent}
+.board{display:none;grid-template-columns:repeat(4,minmax(230px,1fr));gap:12px;padding:14px;overflow-x:auto;background:var(--surface-2);border-radius:0 0 var(--r) var(--r)}
+.col h4{font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px;margin:2px 2px 10px}.col h4 b{margin-left:auto;color:var(--muted);font-weight:500}
+.kc{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-sm);padding:12px;margin-bottom:8px;box-shadow:var(--shadow-sm);cursor:pointer}
+.kc:hover{border-color:var(--line-2)}
+.kc strong{font-weight:500;display:block}.kc p{margin:3px 0 10px;color:var(--muted);font-size:13px}
+.kc footer{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:12px}.kc footer .av{width:22px;height:22px;font-size:9.5px;margin-left:auto}
+.mode-board .tw,.mode-board .tf{display:none}.mode-board .board{display:grid}
+
+/* detail */
+.dh{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:16px}
+.dh .av{width:44px;height:44px;border-radius:10px;font-size:15px}
+.dh h1{font-size:20px;font-weight:600;letter-spacing:-.02em;line-height:1.3;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.dh p{color:var(--muted);font-size:13.5px}
+.dh .sp{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);padding:16px 18px;gap:8px}
+.step{position:relative;padding-top:14px;font-size:13px;color:var(--faint)}
+.step::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;border-radius:99px;background:var(--surface-3)}
+.step b{display:block;font-weight:600;color:var(--muted)}
+.step.done::before,.step.cur::before{background:var(--accent)}
+.step.done b,.step.cur b{color:var(--text)}.step.done,.step.cur{color:var(--muted)}
+.step.cur b::after{content:"Current";margin-left:8px;font-size:11px;font-weight:600;background:var(--accent-soft);color:var(--accent-text);padding:1px 6px;border-radius:5px}
+.dl{margin:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 24px;padding:16px 18px}
+.dl dt{font-size:12.5px;color:var(--muted);margin-bottom:2px}.dl dd{margin:0;font-weight:500}
+.dl .w{grid-column:1/-1}
+.file{display:flex;align-items:center;gap:10px;padding:10px 18px;border-bottom:1px solid var(--line)}
+.file:last-child{border-bottom:0}.file small{color:var(--muted);display:block;font-size:12.5px}
+.tl{padding:16px 18px;display:grid;gap:16px}
+.tl>div{display:flex;gap:10px;font-size:13.5px;position:relative}
+.tl>div:not(:last-child)::before{content:"";position:absolute;left:13px;top:30px;bottom:-14px;width:1px;background:var(--line)}
+.tl .ico{width:27px;height:27px;border-radius:50%;font-size:12px}
+.tl small{display:block;color:var(--muted);font-size:12.5px}
+.tl .q{margin-top:6px;padding:8px 10px;background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r-sm);color:var(--muted)}
+.note{display:flex;gap:8px;padding:12px 18px;border-top:1px solid var(--line)}
+
+/* inputs, overlays */
+.in{width:100%;height:36px;padding:0 10px;border-radius:var(--r-sm);border:1px solid var(--line-2);background:var(--surface);outline:0;font-size:13.5px}
+textarea.in{height:auto;padding:8px 10px;resize:vertical}
+.in:focus{border-color:var(--accent-text);box-shadow:0 0 0 3px var(--accent-soft)}
+.in::placeholder{color:var(--faint)}
+.f{display:grid;gap:5px}.f label{font-weight:500;font-size:13px}.f label i{color:var(--red);font-style:normal}
+.f small{color:var(--muted);font-size:12.5px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.scrim{position:fixed;inset:0;background:rgba(10,14,20,.45);opacity:0;pointer-events:none;transition:opacity .2s;z-index:40}
+.scrim.on{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(500px,100vw);background:var(--surface);border-left:1px solid var(--line);box-shadow:var(--shadow-lg);z-index:50;display:flex;flex-direction:column;transform:translateX(102%);transition:transform .3s cubic-bezier(.2,.8,.2,1)}
+.drawer.on{transform:none}
+.dhd{display:flex;align-items:center;gap:10px;padding:16px 20px;border-bottom:1px solid var(--line)}
+.dhd h3{font-size:16px;font-weight:600}.dhd small{color:var(--muted);font-size:13px;display:block}
+.dbd{padding:20px;overflow:auto;display:grid;gap:14px;flex:1;align-content:start}
+.fs{font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--faint);padding-top:6px;border-top:1px solid var(--line);margin-top:4px}
+.fs:first-child{border:0;padding:0;margin:0}
+.opts{display:flex;gap:6px;flex-wrap:wrap}.opts button{opacity:.5}.opts button.on{opacity:1;box-shadow:0 0 0 1.5px currentColor}
+.drop{border:1.5px dashed var(--line-2);border-radius:var(--r-sm);padding:16px;text-align:center;color:var(--muted);font-size:13.5px}
+.drop b{color:var(--accent-text);font-weight:500}
+.dft{display:flex;gap:8px;padding:12px 20px;border-top:1px solid var(--line);justify-content:flex-end;background:var(--surface-2)}
+.pal{position:fixed;left:50%;top:13vh;width:min(580px,calc(100vw - 32px));transform:translate(-50%,-8px);opacity:0;pointer-events:none;background:var(--surface);border:1px solid var(--line-2);border-radius:12px;box-shadow:var(--shadow-lg);z-index:60;transition:all .16s;overflow:hidden}
+.pal.on{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+.pal header{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--line);color:var(--faint)}
+.pal input{flex:1;border:0;background:none;outline:0;font-size:15px}
+.pal section{padding:6px}
+.pal h5{margin:8px 10px 4px;font-size:11.5px;font-weight:600;color:var(--faint);letter-spacing:.05em;text-transform:uppercase}
+.pal a{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:var(--r-sm);font-weight:500;font-size:13.5px}
+.pal a i{color:var(--muted)}.pal a:hover,.pal a.sel{background:var(--surface-3)}.pal a span{margin-left:auto;color:var(--faint);font-weight:400;font-size:12.5px}
+.pop{position:absolute;top:44px;right:0;width:340px;background:var(--surface);border:1px solid var(--line-2);border-radius:12px;box-shadow:var(--shadow-lg);display:none;text-align:left;font-weight:400;cursor:default;z-index:30}
+.pop.on{display:block}
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,80px);background:var(--text);color:var(--bg);padding:9px 14px;border-radius:var(--r-sm);font-weight:500;z-index:70;transition:transform .3s cubic-bezier(.2,.8,.2,1);display:flex;gap:8px;align-items:center;font-size:13.5px;max-width:calc(100vw - 32px)}
+.toast.on{transform:translate(-50%,0)}
+.foot{color:var(--faint);font-size:12px;text-align:center;padding-top:22px}
+
+/* new-feature highlight */
+.show-new [data-new]{outline:1.5px dashed var(--violet);outline-offset:3px}
+.show-new [data-new]::after{content:attr(data-new);position:absolute;top:-10px;left:10px;z-index:5;background:var(--violet);color:#fff;font:600 10.5px 'Inter';letter-spacing:.02em;padding:1px 7px;border-radius:99px;white-space:nowrap;pointer-events:none}
+[data-theme="dark"] .show-new [data-new]::after{color:#150b33}
+[data-new]{position:relative}
+.show-new #bell[data-new]::after{left:auto;right:-4px}
+.side [data-new]::after{top:50%!important;left:auto!important;right:8px;transform:translateY(-50%)}
+.show-new .side [data-new] em{visibility:hidden}
+
+@media(max-width:1180px){.c3{grid-column:span 6}.c4,.c5,.c7,.c8{grid-column:span 12}.kbar{width:200px}}
+@media(max-width:860px){
+  .app{grid-template-columns:1fr}
+  .side{position:fixed;left:0;top:0;z-index:45;width:256px;transform:translateX(-102%);transition:transform .25s}
+  .side.open{transform:none}
+  .menu-btn{display:inline-flex}.crumb,.fy,.kbar span,.nf span{display:none}.kbar{width:auto;flex:1;margin-left:0}
+  .top{padding:0 12px}.content{padding:16px 14px 32px}.two,.dl{grid-template-columns:1fr}.steps{grid-template-columns:1fr 1fr}
+  .pop{position:fixed;top:60px;right:8px;left:8px;width:auto}
+}
+@media(max-width:560px){.c3{grid-column:span 12}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side" id="side">
+    <div class="brand"><div class="logo">K</div><div><b>KLENZ</b><small>Sales and projects</small></div></div>
+    <nav class="nav">
+      <a href="#" class="on" data-view="dash"><i class="bi bi-speedometer2"></i>Overview</a>
+      <a href="#" data-soon="Calendar of reminders and tender deadlines" data-new="New"><i class="bi bi-calendar3"></i>Calendar</a>
+      <div class="nav-label">Sales</div>
+      <a href="#" data-view="enq"><i class="bi bi-chat-left-text"></i>Enquiries<em class="hot">6</em></a>
+      <a href="#" data-soon="Quotations"><i class="bi bi-file-earmark-text"></i>Quotations<em>57</em></a>
+      <a href="#" data-soon="Positive enquiries"><i class="bi bi-check2-circle"></i>Positive enquiries<em>23</em></a>
+      <a href="#" data-soon="Work orders"><i class="bi bi-clipboard-check"></i>Work orders<em>14</em></a>
+      <div class="nav-label">Projects</div>
+      <a href="#" data-soon="Consultancy"><i class="bi bi-briefcase"></i>Consultancy</a>
+      <a href="#" data-soon="Tender list"><i class="bi bi-file-ruled"></i>Tender list<em>9</em></a>
+      <a href="#" data-soon="To be tendered"><i class="bi bi-hourglass-split"></i>To be tendered<em>4</em></a>
+      <a href="#" data-soon="Klenz Chemicals" data-new="Missing"><i class="bi bi-droplet-half"></i>Klenz Chemicals</a>
+      <div class="nav-label">Insights</div>
+      <a href="#" data-soon="Reports" data-new="New"><i class="bi bi-bar-chart-line"></i>Reports</a>
+      <div class="nav-label">Setup</div>
+      <a href="#" data-soon="Companies"><i class="bi bi-building"></i>Companies</a>
+      <a href="#" data-soon="Financial years"><i class="bi bi-calendar2-range"></i>Financial years</a>
+      <a href="#" data-soon="GST types"><i class="bi bi-percent"></i>GST types</a>
+      <a href="#" data-soon="Users and roles" data-new="New"><i class="bi bi-people"></i>Users and roles</a>
+    </nav>
+    <div class="me"><div class="av">SU</div><div><b>Sample User</b><small>Administrator</small></div><i class="bi bi-three-dots" style="margin-left:auto;color:var(--side-muted)"></i></div>
+  </aside>
+
+  <div class="main">
+    <header class="top">
+      <button class="tb sq menu-btn" id="menuBtn" aria-label="Open menu"><i class="bi bi-list"></i></button>
+      <div class="crumb" id="crumb">KLENZ / <b>Overview</b></div>
+      <button class="kbar" id="kbar" data-new="New: search everything"><i class="bi bi-search"></i><span>Search records, companies, pages</span><kbd>⌘K</kbd></button>
+      <button class="tb nf" id="newBtn" title="Outline the features that do not exist in the app today"><span>New features</span><i class="sw"></i></button>
+      <button class="tb fy"><i class="bi bi-calendar2-range"></i>FY 2026–27<i class="bi bi-chevron-down" style="font-size:10px;color:var(--muted)"></i></button>
+      <button class="tb sq" id="themeBtn" aria-label="Switch theme"><i class="bi bi-moon"></i></button>
+      <div class="tb sq" id="bell" role="button" tabindex="0" aria-label="Notifications" data-new="New: reminders"><i class="bi bi-bell"></i><span class="dot"></span>
+        <div class="pop" id="pop">
+          <div class="ch"><h3>Notifications</h3><div class="sp"><a class="link" href="#">Mark all read</a></div></div>
+          <div class="rows">
+            <div><span class="ico" style="background:var(--red-soft);color:var(--red)"><i class="bi bi-alarm"></i></span><div class="t"><strong>Follow-up overdue by 2 days</strong><small>Contoso Tanneries · Sludge dewatering</small></div></div>
+            <div><span class="ico" style="background:var(--amber-soft);color:var(--amber)"><i class="bi bi-bell"></i></span><div class="t"><strong>2 follow-ups due today</strong><small>Northwind Textiles, Sample Foods</small></div></div>
+            <div><span class="ico"><i class="bi bi-file-ruled"></i></span><div class="t"><strong>Tender closes in 2 days</strong><small>Municipal STP chemicals</small></div></div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="content">
+      <!-- OVERVIEW -->
+      <section class="view on" id="v-dash">
+        <div class="ph">
+          <div><h1>Overview</h1><p>Financial year 2026–27 · 1 Apr 2026 to 31 Mar 2027</p></div>
+          <div class="sp">
+            <div class="seg" id="range"><button>This month</button><button>Quarter</button><button class="on">Year to date</button></div>
+            <button class="btn"><i class="bi bi-download"></i>Export</button>
+            <button class="btn primary" data-open><i class="bi bi-plus-lg"></i>New enquiry</button>
+          </div>
+        </div>
+        <div class="grid">
+          <div class="card pad kpi c3" data-new="New: live numbers"><div class="lab">Enquiries received</div><div class="val num">128</div><div class="row"><span class="delta"><i class="bi bi-arrow-up-short"></i>12%</span><span>vs last year</span><svg data-sp="20,24,22,30,28,36,34,42"></svg></div></div>
+          <div class="card pad kpi c3"><div class="lab">Quoted value</div><div class="val num">₹4.82<small>Cr</small></div><div class="row"><span class="delta"><i class="bi bi-arrow-up-short"></i>18%</span><span>vs last year</span><svg data-sp="38,52,45,61,58,72,66,90"></svg></div></div>
+          <div class="card pad kpi c3"><div class="lab">Enquiry to order rate</div><div class="val num">10.9<small>%</small></div><div class="row"><span class="delta down"><i class="bi bi-arrow-down-short"></i>1.4 pts</span><span>vs last year</span><svg data-sp="14,13,15,12,13,11,12,11"></svg></div></div>
+          <div class="card pad kpi c3"><div class="lab">Work orders won</div><div class="val num">₹1.36<small>Cr</small></div><div class="row"><span class="delta"><i class="bi bi-arrow-up-short"></i>9%</span><span>14 orders</span><svg data-sp="10,14,12,20,15,22,18,25"></svg></div></div>
+
+          <div class="card c5" data-new="New: sales funnel">
+            <div class="ch"><h3>Sales funnel</h3><small>Year to date</small></div>
+            <div class="fn" id="funnel"></div>
+          </div>
+          <div class="card c7">
+            <div class="ch"><h3>Quoted and won by month</h3><small>₹ lakh</small><div class="sp lg"><span><i style="background:var(--accent)"></i>Quoted</span><span><i style="background:var(--line-2)"></i>Won</span></div></div>
+            <div class="chart" id="chart"></div>
+          </div>
+
+          <div class="card c5" data-new="New: follow-up reminders">
+            <div class="ch"><h3>Needs attention</h3><div class="sp"><a class="link" href="#" data-view="enq">View all</a></div></div>
+            <div class="tabs" id="attTabs"><button class="warn" data-k="over">Overdue<b>1</b></button><button class="on" data-k="today">Today<b>2</b></button><button data-k="week">This week<b>3</b></button></div>
+            <div class="rows" id="att"></div>
+          </div>
+          <div class="card c4" data-new="New: tender deadlines">
+            <div class="ch"><h3>Tender deadlines</h3><div class="sp"><a class="link" href="#">View all</a></div></div>
+            <div class="rows">
+              <div><span class="when today">2 days</span><div class="t"><strong>Municipal STP chemicals</strong><small>₹18.4 L · Live</small></div></div>
+              <div><span class="when">6 days</span><div class="t"><strong>Thermal plant DM water</strong><small>₹42.0 L · Live</small></div></div>
+              <div><span class="when">13 days</span><div class="t"><strong>Textile park CETP polymer</strong><small>₹9.6 L · To be tendered</small></div></div>
+              <div><span class="when">21 days</span><div class="t"><strong>Refinery cooling water</strong><small>₹65.0 L · To be tendered</small></div></div>
+            </div>
+          </div>
+          <div class="card c3" data-new="New: activity log">
+            <div class="ch"><h3>Recent activity</h3></div>
+            <div class="rows">
+              <div><div class="av">SU</div><div class="t"><strong>Quotation sent</strong><small>Demo Pharma · 2h ago</small></div></div>
+              <div><div class="av">RK</div><div class="t"><strong>Enquiry added</strong><small>Test Breweries · 5h ago</small></div></div>
+              <div><div class="av">SU</div><div class="t"><strong>Marked positive</strong><small>Acme Dyeing · Yesterday</small></div></div>
+              <div><div class="av">MP</div><div class="t"><strong>Work order logged</strong><small>Example Paper · 2 days ago</small></div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ENQUIRIES -->
+      <section class="view" id="v-enq">
+        <div class="ph">
+          <div><h1>Enquiries</h1><p>128 in this financial year · 3 need attention</p></div>
+          <div class="sp">
+            <div class="seg" id="modeSeg"><button class="on" data-mode="table"><i class="bi bi-list-ul"></i>Table</button><button data-mode="board"><i class="bi bi-kanban"></i>Board</button></div>
+            <button class="btn"><i class="bi bi-download"></i>Export<i class="bi bi-chevron-down" style="font-size:10px"></i></button>
+            <button class="btn primary" data-open><i class="bi bi-plus-lg"></i>New enquiry</button>
+          </div>
+        </div>
+        <div class="card" id="enqCard">
+          <div class="tabs" id="views" data-new="New: saved views"></div>
+          <div class="bar">
+            <select class="fsel" id="fStatus" aria-label="Status"><option value="">All statuses</option><option value="new">New</option><option value="follow">Follow up</option><option value="quoted">Quoted</option><option value="positive">Positive</option><option value="lost">Lost</option></select>
+            <select class="fsel" id="fCo" aria-label="Company"><option value="">All companies</option></select>
+            <button class="btn"><i class="bi bi-calendar3"></i>Any date</button>
+            <button class="btn quiet" id="clear"><i class="bi bi-x"></i>Clear</button>
+            <label class="search"><i class="bi bi-search"></i><input id="q" placeholder="Search this list" aria-label="Search this list"></label>
+          </div>
+          <div class="bulk" id="bulk" data-new="New: bulk actions"><span id="bulkN"></span><button class="btn">Change status</button><button class="btn"><i class="bi bi-download"></i>Export selected</button><button class="btn danger"><i class="bi bi-trash3"></i>Delete</button></div>
+          <div class="tw"><table><thead><tr><th style="width:36px"><input type="checkbox" class="ck" id="all" aria-label="Select all"></th><th>ID</th><th class="s" data-sort="ts">Date<i class="bi bi-arrow-down" id="sTs"></i></th><th class="s" data-sort="co">Company<i id="sCo"></i></th><th>Enquiry</th><th>Status</th><th>Next follow-up</th><th>Owner</th><th></th></tr></thead><tbody id="rows"></tbody></table></div>
+          <div class="board" id="board"></div>
+          <div class="tf"><span id="count"></span><div class="pg"><span style="margin-right:8px">Rows per page</span><select class="fsel" style="height:30px"><option>25</option><option>50</option><option>100</option></select><button aria-label="Previous"><i class="bi bi-chevron-left"></i></button><button class="on">1</button><button>2</button><button>3</button><button aria-label="Next"><i class="bi bi-chevron-right"></i></button></div></div>
+        </div>
+      </section>
+
+      <!-- DETAIL -->
+      <section class="view" id="v-det"></section>
+
+      <div class="foot">Design concept v2 · sample data, not real figures</div>
+    </div>
+  </div>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-label="New enquiry">
+  <div class="dhd"><div><h3>New enquiry</h3><small>Financial year 2026–27</small></div><button class="ib" data-close aria-label="Close" style="margin-left:auto"><i class="bi bi-x-lg"></i></button></div>
+  <div class="dbd">
+    <div class="fs">Enquiry</div>
+    <div class="f"><label>Company <i>*</i></label><select class="in"><option>Select a company</option><option>Northwind Textiles</option><option>Sample Foods Pvt Ltd</option></select></div>
+    <div class="f"><label>Enquiry details <i>*</i></label><textarea class="in" rows="3" placeholder="Boiler water treatment for a 2 TPH boiler"></textarea></div>
+    <div class="two"><div class="f"><label>Enquiry date</label><input class="in" type="date" value="2026-11-11"></div><div class="f"><label>Referred by</label><input class="in" placeholder="Existing customer"></div></div>
+    <div class="f"><label>Customer contact</label><input class="in" placeholder="Name, phone, or email"></div>
+    <div class="fs">Status</div>
+    <div class="opts" id="opts"><button class="st new on">New</button><button class="st follow">Follow up</button><button class="st quoted">Quoted</button><button class="st positive">Positive</button><button class="st lost">Lost</button></div>
+    <div class="fs">Follow-up</div>
+    <div class="two"><div class="f"><label>Remind on</label><input class="in" type="date"></div><div class="f"><label>Where or how</label><input class="in" placeholder="Site visit, phone call"></div></div>
+    <div class="f"><label>Remarks</label><textarea class="in" rows="2"></textarea></div>
+    <div class="f"><label>Attachments</label><div class="drop"><i class="bi bi-cloud-arrow-up"></i> Drop files here or <b>browse</b><br><small>PDF, DOCX, JPG, or PNG</small></div></div>
+  </div>
+  <div class="dft"><button class="btn" data-close>Cancel</button><button class="btn" id="saveNew">Save and add another</button><button class="btn primary" id="save">Save enquiry</button></div>
+</aside>
+
+<div class="pal" id="pal" role="dialog" aria-label="Search">
+  <header><i class="bi bi-search"></i><input id="palIn" placeholder="Search records, companies, pages"><kbd>Esc</kbd></header>
+  <section>
+    <h5>Actions</h5>
+    <a href="#" class="sel" data-open><i class="bi bi-plus-lg"></i>New enquiry<span>N</span></a>
+    <a href="#"><i class="bi bi-file-earmark-plus"></i>New quotation</a>
+    <h5>Go to</h5>
+    <a href="#" data-view="dash"><i class="bi bi-speedometer2"></i>Overview</a>
+    <a href="#" data-view="enq"><i class="bi bi-chat-left-text"></i>Enquiries</a>
+    <h5>Records</h5>
+    <a href="#" data-rec="0"><i class="bi bi-building"></i>Northwind Textiles<span>ENQ-0128 · Follow up</span></a>
+    <a href="#" data-rec="2"><i class="bi bi-building"></i>Demo Pharma<span>ENQ-0126 · Quoted</span></a>
+  </section>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const TODAY='2026-11-11',ST={new:'New',follow:'Follow up',quoted:'Quoted',positive:'Positive',lost:'Lost'};
+const DATA=[
+ {id:'ENQ-0128',ts:'2026-11-09',co:'Northwind Textiles',ref:'Existing customer',e:'Effluent treatment chemicals for dyeing unit',cu:'Plant manager',s:'follow',rd:'2026-11-11',rp:'Site visit',f:2,own:'SU'},
+ {id:'ENQ-0127',ts:'2026-11-08',co:'Sample Foods Pvt Ltd',ref:'Website',e:'Boiler water treatment, 2 TPH boiler',cu:'Utilities head',s:'follow',rd:'2026-11-11',rp:'Phone call',f:0,own:'RK'},
+ {id:'ENQ-0126',ts:'2026-11-06',co:'Demo Pharma',ref:'Consultant',e:'Cooling tower consultancy and dosing',cu:'Engineering lead',s:'quoted',rd:'2026-11-12',rp:'Head office',f:1,own:'SU'},
+ {id:'ENQ-0125',ts:'2026-11-05',co:'Example Paper Mills',ref:'Trade fair',e:'RO antiscalant trial for 50 KLD plant',cu:'Purchase officer',s:'new',rd:'2026-11-14',rp:'Plant',f:0,own:'MP'},
+ {id:'ENQ-0124',ts:'2026-11-04',co:'Acme Dyeing Works',ref:'Existing customer',e:'Colour removal polymer, monthly supply',cu:'Owner',s:'positive',rd:'',rp:'',f:1,own:'SU'},
+ {id:'ENQ-0123',ts:'2026-11-02',co:'Contoso Tanneries',ref:'Reference',e:'Sludge dewatering polyelectrolyte',cu:'ETP in-charge',s:'quoted',rd:'2026-11-09',rp:'Phone call',f:1,own:'RK'},
+ {id:'ENQ-0122',ts:'2026-10-30',co:'Placeholder Steels',ref:'Cold call',e:'Descaling chemical for heat exchangers',cu:'Maintenance head',s:'lost',rd:'',rp:'',f:0,own:'MP'},
+ {id:'ENQ-0121',ts:'2026-10-28',co:'Test Breweries',ref:'Website',e:'CIP cleaning chemicals annual contract',cu:'QA manager',s:'new',rd:'2026-11-16',rp:'Site visit',f:0,own:'SU'}
+];
+const ini=n=>n.split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase();
+const d=s=>new Date(s+'T00:00:00').toLocaleDateString('en-GB',{day:'2-digit',month:'short'});
+const due=x=>!x.rd?'':x.rd<TODAY?'over':x.rd===TODAY?'today':'';
+const when=x=>!x.rd?'<span style="color:var(--faint)">None</span>':`<span class="when ${due(x)}">${due(x)==='over'?'Overdue · ':due(x)==='today'?'Today · ':''}${d(x.rd)}</span> <span style="color:var(--muted);font-size:12.5px">${x.rp}</span>`;
+let view='all',fs='',fc='',q='',sort='ts',dir=-1,sel=new Set();
+const VIEWS=[['all','All enquiries',x=>true],['mine','Assigned to me',x=>x.own==='SU'],['today','Due today',x=>due(x)==='today'],['over','Overdue',x=>due(x)==='over']];
+function list(){const v=VIEWS.find(v=>v[0]===view)[2];
+  return DATA.filter(x=>v(x)&&(!fs||x.s===fs)&&(!fc||x.co===fc)&&(x.co+x.e+x.id).toLowerCase().includes(q)).sort((a,b)=>(a[sort]>b[sort]?1:-1)*dir)}
+function render(){
+  const l=list();
+  $('#views').innerHTML=VIEWS.map(([k,n,f])=>`<button class="${view===k?'on':''} ${k==='over'?'warn':''}" data-v="${k}">${n}<b>${DATA.filter(f).length}</b></button>`).join('')+'<button style="color:var(--faint)"><i class="bi bi-plus"></i>Save view</button>';
+  $('#rows').innerHTML=l.map(x=>{const i=DATA.indexOf(x);return `<tr data-rec="${i}" class="${sel.has(i)?'sel':''}">
+   <td><input type="checkbox" class="ck" data-ck="${i}" ${sel.has(i)?'checked':''} aria-label="Select ${x.id}"></td>
+   <td class="id num">${x.id}</td><td class="num" style="color:var(--muted)">${d(x.ts)}</td>
+   <td><div class="co"><div class="av">${ini(x.co)}</div><div><b>${x.co}</b><small>${x.cu}</small></div></div></td>
+   <td><div class="tr" title="${x.e}">${x.e}</div></td>
+   <td><span class="st ${x.s}">${ST[x.s]}</span></td><td>${when(x)}</td>
+   <td><div class="av" style="width:24px;height:24px;font-size:9.5px" title="Owner">${x.own}</div></td>
+   <td><div class="acts"><button class="ib" aria-label="Edit"><i class="bi bi-pencil"></i></button><button class="ib" aria-label="More"><i class="bi bi-three-dots"></i></button></div></td></tr>`}).join('')
+   ||'<tr><td colspan="9" style="text-align:center;padding:44px;color:var(--muted);cursor:default">No enquiries match these filters. Clear them or add a new enquiry.</td></tr>';
+  $('#board').innerHTML=['new','follow','quoted','positive'].map(s=>{const c=l.filter(x=>x.s===s);return `<div class="col"><h4><span class="st ${s}">${ST[s]}</span><b>${c.length}</b></h4>${c.map(x=>`<div class="kc" data-rec="${DATA.indexOf(x)}"><strong>${x.co}</strong><p>${x.e}</p><footer>${x.rd?`<span class="when ${due(x)}">${d(x.rd)}</span>`:''}${x.f?`<i class="bi bi-paperclip"></i>${x.f}`:''}<div class="av">${x.own}</div></footer></div>`).join('')}</div>`}).join('');
+  $('#count').textContent=`${l.length} of 128 enquiries`;
+  $('#sTs').className=sort==='ts'?'bi bi-arrow-'+(dir<0?'down':'up'):'';$('#sCo').className=sort==='co'?'bi bi-arrow-'+(dir<0?'down':'up'):'';
+  $('#bulk').classList.toggle('on',sel.size>0);$('#bulkN').textContent=sel.size+' selected';
+  $('#all').checked=l.length>0&&l.every(x=>sel.has(DATA.indexOf(x)));
+}
+function detail(i){const x=DATA[i],step={new:0,follow:0,quoted:1,positive:2,lost:0}[x.s];
+  const S=[['Enquiry','Received '+d(x.ts)],['Quotation',step>=1?'Sent · ₹6.4 L':'Not sent yet'],['Positive',step>=2?'Customer confirmed':'Awaiting customer'],['Work order','Not received']];
+  $('#v-det').innerHTML=`<div class="dh"><div class="av" style="border-radius:10px">${ini(x.co)}</div>
+   <div><h1>${x.co}<span class="st ${x.s}">${ST[x.s]}</span></h1><p>${x.id} · Added ${d(x.ts)} by ${x.own} · via ${x.ref}</p></div>
+   <div class="sp"><button class="btn" data-view="enq"><i class="bi bi-arrow-left"></i>Back</button><button class="btn"><i class="bi bi-pencil"></i>Edit</button>
+   <button class="btn primary" data-new="New: one-click convert" data-soon="This would open a quotation pre-filled from the enquiry"><i class="bi bi-file-earmark-plus"></i>${step?'Create work order':'Create quotation'}</button></div></div>
+  <div class="grid">
+   <div class="card c12" data-new="New: linked pipeline"><div class="steps">${S.map((s,k)=>`<div class="step ${k<step?'done':k===step?'cur':''}"><b>${s[0]}</b>${s[1]}</div>`).join('')}</div></div>
+   <div class="c8" style="display:grid;gap:16px;align-content:start">
+    <div class="card"><div class="ch"><h3>Details</h3></div><dl class="dl">
+     <div class="w"><dt>Enquiry</dt><dd>${x.e}</dd></div><div><dt>Customer contact</dt><dd>${x.cu}</dd></div><div><dt>Referred by</dt><dd>${x.ref}</dd></div>
+     <div><dt>Enquiry date</dt><dd>${d(x.ts)} 2026</dd></div><div><dt>Financial year</dt><dd>2026–27</dd></div><div class="w"><dt>Remarks</dt><dd style="font-weight:400;color:var(--muted)">Customer wants a trial before committing to a monthly supply.</dd></div></dl></div>
+    <div class="card" data-new="New: multiple files"><div class="ch"><h3>Attachments</h3><small>${x.f||'None'}</small><div class="sp"><button class="btn"><i class="bi bi-upload"></i>Upload</button></div></div>
+     ${x.f?Array.from({length:x.f},(_,k)=>`<div class="file"><span class="ico"><i class="bi bi-file-earmark-${k?'image':'pdf'}"></i></span><div style="flex:1"><b style="font-weight:500">${k?'site-photo.jpg':'requirement-sheet.pdf'}</b><small>${k?'1.8 MB':'240 KB'} · uploaded ${d(x.ts)}</small></div><button class="ib" aria-label="Download"><i class="bi bi-download"></i></button></div>`).join(''):'<div style="padding:22px 18px;color:var(--muted)">No files yet. Upload a requirement sheet or site photo.</div>'}</div>
+   </div>
+   <div class="c4" style="display:grid;gap:16px;align-content:start">
+    <div class="card" data-new="New: reminders"><div class="ch"><h3>Next follow-up</h3><div class="sp"><a class="link" href="#">Reschedule</a></div></div>
+     <div class="rows"><div>${x.rd?`<span class="when ${due(x)}">${due(x)==='over'?'Overdue':due(x)==='today'?'Today':d(x.rd)}</span><div class="t"><strong>${x.rp}</strong><small>${d(x.rd)} 2026 · assigned to ${x.own}</small></div><button class="ib chk" aria-label="Mark done"><i class="bi bi-check-lg"></i></button>`:'<div class="t"><small>No follow-up scheduled.</small></div>'}</div></div></div>
+    <div class="card" data-new="New: history and notes"><div class="ch"><h3>Activity</h3></div><div class="tl">
+     <div><span class="ico"><i class="bi bi-chat-left"></i></span><div><b style="font-weight:500">SU added a note</b><small>Today, 10:42</small><div class="q">Spoke to the plant manager. Send revised dosing chart before the visit.</div></div></div>
+     <div><span class="ico"><i class="bi bi-arrow-left-right"></i></span><div><b style="font-weight:500">Status changed to ${ST[x.s]}</b><small>${d(x.ts)}, 16:05 · by ${x.own}</small></div></div>
+     <div><span class="ico"><i class="bi bi-plus-lg"></i></span><div><b style="font-weight:500">Enquiry created</b><small>${d(x.ts)}, 11:20 · by ${x.own}</small></div></div></div>
+     <div class="note"><input class="in" placeholder="Add a note"><button class="btn">Add</button></div></div>
+   </div></div>`;
+  go('det','Enquiries / '+x.id);
+}
+function go(v,label){$$('.view').forEach(x=>x.classList.toggle('on',x.id==='v-'+v));
+  $$('.nav a').forEach(a=>a.classList.toggle('on',a.dataset.view===(v==='det'?'enq':v)));
+  $('#crumb').innerHTML='KLENZ / <b>'+(label||(v==='dash'?'Overview':'Enquiries'))+'</b>';$('#side').classList.remove('open');window.scrollTo({top:0});if(v==='dash')draw()}
+function toast(t){const e=$('#toast');e.innerHTML='<i class="bi bi-info-circle"></i>'+t;e.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove('on'),2600)}
+function closeAll(){['#drawer','#pal','#scrim','#pop'].forEach(s=>$(s).classList.remove('on'))}
+function openDrawer(){closeAll();$('#drawer').classList.add('on');$('#scrim').classList.add('on')}
+function openPal(){closeAll();$('#pal').classList.add('on');$('#scrim').classList.add('on');setTimeout(()=>$('#palIn').focus(),40)}
+document.addEventListener('click',e=>{const t=e.target,c=s=>t.closest(s);
+  if(c('#bell')&&!c('#pop')){const o=$('#pop').classList.contains('on');closeAll();$('#pop').classList.toggle('on',!o);return}
+  if(!c('#pop'))$('#pop').classList.remove('on');
+  if(c('[data-ck]')){const i=+c('[data-ck]').dataset.ck;sel.has(i)?sel.delete(i):sel.add(i);render();return}
+  if(t.id==='all'){const l=list().map(x=>DATA.indexOf(x));t.checked?l.forEach(i=>sel.add(i)):sel.clear();render();return}
+  if(c('.acts')||c('.chk')){if(c('.chk'))c('.chk').classList.toggle('done');return}
+  if(c('[data-open]')){e.preventDefault();openDrawer();return}
+  if(c('[data-close]')||t.id==='scrim'){closeAll();return}
+  if(c('[data-soon]')){e.preventDefault();const s=c('[data-soon]').dataset.soon;toast(c('.nav')?s+' uses the same list and record layout as Enquiries':s);return}
+  if(c('[data-rec]')){e.preventDefault();closeAll();detail(+c('[data-rec]').dataset.rec);return}
+  if(c('[data-view]')){e.preventDefault();closeAll();go(c('[data-view]').dataset.view);return}
+  if(c('[data-v]')){view=c('[data-v]').dataset.v;render();return}
+  if(c('[data-sort]')){const k=c('[data-sort]').dataset.sort;dir=sort===k?-dir:(k==='ts'?-1:1);sort=k;render();return}
+  if(c('#modeSeg button')){const m=c('#modeSeg button');$$('#modeSeg button').forEach(b=>b.classList.toggle('on',b===m));$('#enqCard').classList.toggle('mode-board',m.dataset.mode==='board');return}
+  if(c('#range button')){$$('#range button').forEach(b=>b.classList.toggle('on',b===c('#range button')));return}
+  if(c('#attTabs button')){$$('#attTabs button').forEach(b=>b.classList.toggle('on',b===c('#attTabs button')));att(c('#attTabs button').dataset.k);return}
+  if(c('#opts button'))$$('#opts button').forEach(b=>b.classList.toggle('on',b===c('#opts button')));
+  if(t.id==='clear'){fs=fc=q='';$('#fStatus').value=$('#fCo').value=$('#q').value='';render()}
+});
+$('#fCo').innerHTML+=[...new Set(DATA.map(x=>x.co))].sort().map(c=>`<option>${c}</option>`).join('');
+$('#fStatus').onchange=e=>{fs=e.target.value;render()};$('#fCo').onchange=e=>{fc=e.target.value;render()};
+$('#q').oninput=e=>{q=e.target.value.toLowerCase();render()};
+$('#kbar').onclick=openPal;$('#menuBtn').onclick=()=>$('#side').classList.toggle('open');
+$('#save').onclick=$('#saveNew').onclick=()=>{closeAll();toast('Enquiry saved')};
+$('#newBtn').onclick=()=>document.body.classList.toggle('show-new');
+$('#themeBtn').onclick=()=>{const h=document.documentElement,k=h.dataset.theme==='dark';h.dataset.theme=k?'light':'dark';$('#themeBtn i').className=k?'bi bi-moon':'bi bi-sun';draw()};
+document.addEventListener('keydown',e=>{const typing=/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName);
+  if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();$('#pal').classList.contains('on')?closeAll():openPal()}
+  else if(e.key==='Escape')closeAll();else if(!typing&&!e.metaKey&&!e.ctrlKey&&e.key.toLowerCase()==='n'){e.preventDefault();openDrawer()}});
+function att(k){const l=DATA.filter(x=>k==='over'?due(x)==='over':k==='today'?due(x)==='today':x.rd>TODAY).slice(0,4);
+  $('#att').innerHTML=l.map(x=>`<div data-rec="${DATA.indexOf(x)}" style="cursor:pointer"><span class="when ${due(x)}">${due(x)==='over'?'2 days late':due(x)==='today'?'Today':d(x.rd)}</span><div class="t"><strong>${x.co}</strong><small>${x.rp} · ${x.e}</small></div><button class="ib chk" aria-label="Mark done"><i class="bi bi-check-lg"></i></button></div>`).join('')}
+function draw(){
+  const F=[['Enquiries',128],['Quoted',57],['Positive',23],['Work orders',14]];
+  $('#funnel').innerHTML=F.map((f,i)=>`<div class="fr"><b>${f[0]}</b><div class="ft"><div class="ff" data-w="${f[1]/128*100}" style="opacity:${1-i*.17}"></div></div><span class="n num">${f[1]}</span></div>${i<3?`<div class="fr"><div class="fc"><i class="bi bi-arrow-down-short"></i>${Math.round(F[i+1][1]/f[1]*100)}% move forward</div></div>`:''}`).join('');
+  requestAnimationFrame(()=>requestAnimationFrame(()=>$$('.ff').forEach(e=>e.style.width=e.dataset.w+'%')));
+  const M=['Apr','May','Jun','Jul','Aug','Sep','Oct','Nov'],Q=[38,52,45,61,58,72,66,90],W=[10,14,12,20,15,22,18,25],H=190,L=34,Wd=560,bw=(Wd-L)/M.length;
+  let s=`<svg viewBox="0 0 ${Wd} ${H+26}" role="img" aria-label="Quoted and won value by month, April to November">`;
+  [0,25,50,75,100].forEach(v=>{const y=H-v/100*(H-10);s+=`<line x1="${L}" x2="${Wd}" y1="${y}" y2="${y}" stroke="var(--line)" stroke-width="1"/><text x="${L-8}" y="${y+4}" text-anchor="end" font-size="11" fill="var(--faint)">${v}</text>`});
+  M.forEach((m,i)=>{const x=L+i*bw+bw/2,hq=Q[i]/100*(H-10),hw=W[i]/100*(H-10);
+    s+=`<rect x="${x-17}" y="${H-hq}" width="16" height="${hq}" rx="3" fill="var(--accent)"><title>${m}: quoted ₹${Q[i]} L</title></rect><rect x="${x+1}" y="${H-hw}" width="16" height="${hw}" rx="3" fill="var(--line-2)"><title>${m}: won ₹${W[i]} L</title></rect><text x="${x}" y="${H+18}" text-anchor="middle" font-size="11.5" fill="var(--muted)">${m}</text>`});
+  $('#chart').innerHTML=s+'</svg>';
+  $$('[data-sp]').forEach(el=>{const v=el.dataset.sp.split(',').map(Number),mx=Math.max(...v),mn=Math.min(...v);
+    const p=v.map((n,i)=>`${(i/(v.length-1)*82+1).toFixed(1)},${(27-(n-mn)/(mx-mn||1)*24).toFixed(1)}`).join(' ');
+    el.setAttribute('viewBox','0 0 84 30');el.innerHTML=`<polyline points="${p}" fill="none" stroke="var(--accent-text)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>`});
+}
+render();att('today');draw();
+</script>
+</body>
+</html>

@@ -1,0 +1,78 @@
+@model IEnumerable<KLENZ.Models.Project_KlenzChemicals>
+
+@{
+    ViewData["Title"] = "Klenz Chemicals";
+}
+
+<div class="page-head">
+    <div class="page-title">
+        <span class="page-icon"><i class="bi bi-droplet-half"></i></span>
+        <div>
+            <h1>Klenz Chemicals</h1>
+            <p class="page-sub" data-count></p>
+        </div>
+    </div>
+    <div class="page-actions">
+        <button type="button" id="exportExcel_ProjectKlenzChemicals" class="btn" title="Export to Excel"><i class="bi bi-file-earmark-spreadsheet"></i><span>Excel</span></button>
+        <button type="button" id="exportPdf_ProjectKlenzChemicals" class="btn" title="Export to PDF"><i class="bi bi-file-earmark-pdf"></i><span>PDF</span></button>
+        <a asp-action="Create" class="btn btn-primary" data-primary-action><i class="bi bi-plus-lg"></i><span>New Klenz Chemicals project</span></a>
+    </div>
+</div>
+
+<div class="card list-card">
+    <div class="table-responsive">
+        <table class="table datatable align-middle">
+            <thead>
+                    <tr>
+                        <th class="action-column">Actions</th>
+                        <th>Financial Year</th>
+                        <th>Work Order Date</th>
+                        <th>Company Name</th>
+                        <th>Customer Details</th>
+                        <th>Work Details</th>
+                        <th>Project Cost</th>
+                        <th>GST (%)</th>
+                        <th>Total</th>
+                        <th>Work Duration</th>
+                        <th>Remarks</th>
+                        <th>Created Date</th>
+                        <th>Created User</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="action-column">
+                                <div class="d-flex align-items-center justify-content-center gap-2">
+                                    <a asp-action="Edit" asp-route-id="@item.Id" title="Edit" class="text-decoration-none">
+                                        <i class="bi bi-pencil-square text-success fs-5"></i>
+                                    </a>
+                                    <a asp-action="Details" asp-route-id="@item.Id" title="Details" class="text-decoration-none">
+                                        <i class="bi bi-info-circle text-primary fs-5"></i>
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@item.Id" title="Delete" class="text-decoration-none">
+                                        <i class="bi bi-trash text-danger fs-5"></i>
+                                    </a>
+                                </div>
+                            </td>
+                            <td>@(item.FinancialYear?.FyYear ?? "N/A")</td>
+                            <td>@item.WorkOrderDate?.ToString("dd/MM/yyyy")</td>
+                            <td><strong class="text-dark">@(item.Company?.ShortName ?? "N/A")</strong></td>
+                            <td>@item.CustomerDetails</td>
+                            <td>@item.WorkDetails</td>
+                            <td>@(item.ProjectCost.HasValue ? item.ProjectCost.Value.ToString("C") : "N/A")</td>
+                            <td>@(item.GSTType != null ? $"{item.GSTType.GSTType} %" : "N/A")</td>
+                            <td>@(item.Total.HasValue ? item.Total.Value.ToString("C") : "N/A")</td>
+                            <td>@item.WorkDuration</td>
+                            <td>@item.Remarks</td>
+                            <td>@item.CreatedDateTime?.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td>@(string.IsNullOrWhiteSpace(item.CreatedUserName) ? "System" : item.CreatedUserName)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+    </div>
+</div>
+
+<script src="~/js/Pdf_Excel_Export.js" asp-append-version="true"></script>

@@ -1,4 +1,17 @@
-﻿@model KLENZ.Models.SalesEnquiry
+@model KLENZ.Models.SalesEnquiry
+@inject KLENZ.Data.KLENZDbContext Db
+@{
+    // Suggest the statuses already set up in the Status table. Typing a different one still works.
+    var statusOptions = new List<string>();
+    try
+    {
+        statusOptions = Db.Status.Select(x => x.FullName).ToList();
+    }
+    catch
+    {
+        // Suggestions are optional: the form works without them.
+    }
+}
 
 @{
     ViewData["Title"] = "Edit Sales Enquiry";
@@ -53,7 +66,13 @@
                 <div class="col-md-6">
                     <div class="mb-3">
                         <label asp-for="Status" class="fw-bold"></label>
-                        <input asp-for="Status" class="form-control" />
+                        <input asp-for="Status" autocomplete="off" class="form-control" list="statusOptions" placeholder="Choose or type a status" />
+                        <datalist id="statusOptions">
+                            @foreach (var option in statusOptions)
+                            {
+                                <option value="@option"></option>
+                            }
+                        </datalist>
                         <span asp-validation-for="Status" class="text-danger"></span>
                     </div>
 
