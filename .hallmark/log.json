@@ -1,0 +1,32 @@
+[
+ {
+  "mode": "redesign",
+  "depth": "full",
+  "scope": "app",
+  "shape": "app screen",
+  "theme": "brand",
+  "axes": "light/grotesk-sans/chromatic-teal",
+  "hero": "none",
+  "nav": "kept: dark sidebar, top bar, phone tab bar",
+  "footer": "none",
+  "imagery": "none",
+  "photos": [],
+  "entry": "none",
+  "fingerprint": "app/brand/teal/sidebar/ruled-stats/queue-first",
+  "sections": [
+   "stats strip",
+   "follow-up queue",
+   "funnel",
+   "chart",
+   "recent enquiries",
+   "work orders",
+   "tenders"
+  ],
+  "signature": "the follow-up queue on the overview",
+  "waived": [
+   "72"
+  ],
+  "prompt": "internal sales and projects tracker for a water-treatment chemicals company",
+  "date": "2026-11-13"
+ }
+]

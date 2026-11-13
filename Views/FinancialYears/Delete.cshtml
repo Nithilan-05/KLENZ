@@ -1,27 +1,28 @@
 @model KLENZ.Models.FinancialYear
 
 @{
-    ViewData["Title"] = "Delete Financial Year";
+    ViewData["Title"] = "Delete financial year";
 }
 
-<div class="card shadow-lg rounded-card border-0">
-    <div class="card-header bg-danger text-white py-2">
-        <h5 class="mb-0">Delete Financial Year</h5>
+<a asp-action="Index" class="back-link"><i class="bi bi-arrow-left" aria-hidden="true"></i>Back to financial years</a>
+<div class="page-head">
+    <div class="page-title">
+        <div>
+            <h1>Delete financial year</h1>
+        </div>
     </div>
+</div>
+
+<div class="card detail-card">
     <div class="card-body p-4">
-        <h5 class="text-danger mb-3">Are you sure you want to delete this Financial Year?</h5>
-        <dl class="row">
-            <dt class="col-sm-3">Start Date</dt>
-            <dd class="col-sm-9">@Model.StartDate.ToString("dd/MM/yyyy")</dd>
+        <p class="notice notice-danger"><i class="bi bi-exclamation-triangle" aria-hidden="true"></i>Are you sure you want to delete this Financial Year?</p><dl class="facts">
+            <div class="fact"><dt>Start Date</dt><dd>@Model.StartDate.ToString("dd/MM/yyyy")</dd></div>
 
-            <dt class="col-sm-3">End Date</dt>
-            <dd class="col-sm-9">@Model.EndDate.ToString("dd/MM/yyyy")</dd>
+            <div class="fact"><dt>End Date</dt><dd>@Model.EndDate.ToString("dd/MM/yyyy")</dd></div>
 
-            <dt class="col-sm-3">Financial Year</dt>
-            <dd class="col-sm-9"><strong>@Model.FyYear</strong></dd>
+            <div class="fact"><dt>Financial Year</dt><dd><strong>@Model.FyYear</strong></dd></div>
 
-            <dt class="col-sm-3">Status</dt>
-            <dd class="col-sm-9">@(Model.IsActive == 1 ? "Active" : "Inactive")</dd>
+            <div class="fact"><dt>Status</dt><dd>@(Model.IsActive == 1 ? "Active" : "Inactive")</dd></div>
         </dl>
         
         <form asp-action="Delete" class="mt-3">

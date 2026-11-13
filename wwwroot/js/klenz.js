@@ -270,7 +270,7 @@
                 .then(function (rows) {
                     if (my !== seq) { return; }
                     paint((rows || []).map(function (r) {
-                        return { label: r.company || 'Enquiry', href: pal.getAttribute('data-details') + '/' + r.id, icon: 'bi bi-chat-left-text', hint: [r.details, r.status].filter(Boolean).join(' · ') };
+                        return { label: r.company || 'Enquiry', href: pal.getAttribute('data-details') + '/' + r.id, icon: 'bi bi-chat-left-text', hint: [r.details, r.status].filter(Boolean).join(', ') };
                     }));
                 })
                 .catch(function () { /* search is a convenience; the page list still works */ });
@@ -340,8 +340,9 @@
                 body.innerHTML = rows.map(function (r) {
                     var label = r.state === 'over' ? 'Overdue' : r.state === 'today' ? 'Today' : r.when;
                     return '<a href="' + esc(details + '/' + r.id) + '"><span class="when ' + esc(r.state) + '">' + esc(label) + '</span>' +
-                        '<div class="t"><strong>' + esc(r.company || 'Enquiry') + '</strong><small>' +
-                        esc([r.place, r.details].filter(Boolean).join(' · ')) + '</small></div></a>';
+                        '<div class="t"><strong>' + esc(r.company || 'Enquiry') + '</strong>' +
+                        (r.details ? '<small>' + esc(r.details) + '</small>' : '') +
+                        (r.place ? '<small>' + esc(r.place) + '</small>' : '') + '</div></a>';
                 }).join('');
             })
             .catch(function () {

@@ -13,25 +13,10 @@
     <div><strong>Delete this record?</strong><p>It is removed permanently and cannot be recovered.</p></div>
 </div>
 <div class="card detail-card">
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.GSTType)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.GSTType)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedDateTime)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedDateTime)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedUserId)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedUserId)
-        </dd>
+    <dl class="facts">
+        <div class="fact"><dt>@Html.DisplayNameFor(model => model.GSTType)</dt><dd>@Html.DisplayFor(model => model.GSTType)</dd></div>
+        <div class="fact"><dt>@Html.DisplayNameFor(model => model.CreatedDateTime)</dt><dd>@Html.DisplayFor(model => model.CreatedDateTime)</dd></div>
+        <div class="fact"><dt>@Html.DisplayNameFor(model => model.CreatedUserId)</dt><dd>@Html.DisplayFor(model => model.CreatedUserId)</dd></div>
     </dl>
     
     <form asp-action="Delete">

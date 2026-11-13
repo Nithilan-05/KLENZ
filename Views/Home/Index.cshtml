@@ -4,6 +4,18 @@
     ViewData["Title"] = "Overview";
     var attention = Model.Overdue.Count + Model.DueToday.Count;
     var firstTab = Model.Overdue.Count > 0 && Model.DueToday.Count == 0 ? "over" : "today";
+    var stages = new (string Name, int Count)[]
+    {
+        ("Enquiries", Model.Enquiries), ("Quotations", Model.Quotations), ("Positive", Model.Positive), ("Projects", Model.Projects)
+    };
+    var topStage = Math.Max(1, stages.Max(s => s.Count));
+    var funnel = stages.Select((s, i) => new
+    {
+        s.Name,
+        s.Count,
+        Share = (s.Count / (double)topStage).ToString("0.###", System.Globalization.CultureInfo.InvariantCulture),
+        Step = i + 1 < stages.Length ? StepText(s.Count, stages[i + 1].Count) : ""
+    }).ToList();
 }
 
 @functions {
@@ -20,6 +32,13 @@
     {
         return whole <= 0 ? "0%" : Math.Round(part * 100.0 / whole) + "%";
     }
+
+    static string StepText(int count, int next)
+    {
+        if (count <= 0) { return "No data yet"; }
+        if (next > count) { return "More recorded at the next stage"; }
+        return Math.Round(next * 100.0 / count) + "% move forward";
+    }
 }
 
 <div class="page-head">
@@ -28,20 +47,20 @@
             <h1>Overview</h1>
             @if (Model.HasFinancialYear)
             {
-                <p class="page-sub">Financial year @Model.FinancialYear · @Model.StartDate.ToString("d MMM yyyy") to @Model.EndDate.ToString("d MMM yyyy")</p>
+                <p class="page-sub">Financial year @Model.FinancialYear, @Model.StartDate.ToString("d MMM yyyy") to @Model.EndDate.ToString("d MMM yyyy")</p>
             }
         </div>
     </div>
     <div class="page-actions">
-        <a asp-controller="QuotationReports" asp-action="Create" class="btn"><i class="bi bi-file-earmark-plus"></i><span>New quotation</span></a>
-        <a asp-controller="SalesEnquiries" asp-action="Create" class="btn btn-primary" data-primary-action><i class="bi bi-plus-lg"></i><span>New enquiry</span></a>
+        <a asp-controller="QuotationReports" asp-action="Create" class="btn"><i class="bi bi-file-earmark-plus" aria-hidden="true"></i><span>New quotation</span></a>
+        <a asp-controller="SalesEnquiries" asp-action="Create" class="btn btn-primary" data-primary-action><i class="bi bi-plus-lg" aria-hidden="true"></i><span>New enquiry</span></a>
     </div>
 </div>
 
 @if (!Model.HasFinancialYear)
 {
     <div class="notice" role="status">
-        <i class="bi bi-calendar2-range"></i>
+        <i class="bi bi-calendar2-range" aria-hidden="true"></i>
         <div>
             <strong>No active financial year</strong>
             <p>Mark a financial year as active to see numbers here. <a asp-controller="FinancialYears" asp-action="Index">Open financial years</a></p>
@@ -50,101 +69,117 @@
 }
 else
 {
-    <div class="grid">
-        <a class="card kpi g3" asp-controller="SalesEnquiries" asp-action="Index">
-            <div class="lab">Enquiries <i class="bi bi-chat-left-text"></i></div>
-            <div class="val num">@Model.Enquiries</div>
-            <div class="sub">@(attention == 0 ? "No follow-ups due" : attention + (attention == 1 ? " follow-up needs attention" : " follow-ups need attention"))</div>
+    <section class="stats" aria-label="This financial year">
+        <a class="stat" asp-controller="SalesEnquiries" asp-action="Index">
+            <span class="stat-label">Enquiries</span>
+            <span class="stat-value">@Model.Enquiries</span>
+            <span class="stat-note @(attention > 0 ? "warn" : "")">@(attention == 0 ? "No follow-ups due" : attention + (attention == 1 ? " follow-up needs attention" : " follow-ups need attention"))</span>
         </a>
-        <a class="card kpi g3" asp-controller="QuotationReports" asp-action="Index">
-            <div class="lab">Quoted value <i class="bi bi-file-earmark-text"></i></div>
-            <div class="val num">@Inr(Model.QuotedValue)</div>
-            <div class="sub">@Model.Quotations @(Model.Quotations == 1 ? "quotation" : "quotations")</div>
+        <a class="stat" asp-controller="QuotationReports" asp-action="Index">
+            <span class="stat-label">Quoted value</span>
+            <span class="stat-value">@Inr(Model.QuotedValue)</span>
+            <span class="stat-note">@Model.Quotations @(Model.Quotations == 1 ? "quotation" : "quotations")</span>
         </a>
-        <a class="card kpi g3" asp-controller="ProjectLists" asp-action="Index">
-            <div class="lab">Work orders <i class="bi bi-clipboard-check"></i></div>
-            <div class="val num">@Inr(Model.WonValue)</div>
-            <div class="sub">@Model.Projects @(Model.Projects == 1 ? "project" : "projects") · @Rate(Model.Projects, Model.Enquiries) of enquiries</div>
+        <a class="stat" asp-controller="ProjectLists" asp-action="Index">
+            <span class="stat-label">Work orders</span>
+            <span class="stat-value">@Inr(Model.WonValue)</span>
+            <span class="stat-note">@Model.Projects @(Model.Projects == 1 ? "project" : "projects"), @Rate(Model.Projects, Model.Enquiries) of enquiries</span>
         </a>
-        <a class="card kpi g3" asp-controller="ProjectTenderList" asp-action="Index">
-            <div class="lab">Tenders <i class="bi bi-file-ruled"></i></div>
-            <div class="val num">@Model.Tenders</div>
-            <div class="sub">@Model.UpcomingTenders to be tendered · @Model.Consultancy consultancy</div>
+        <a class="stat" asp-controller="ProjectTenderList" asp-action="Index">
+            <span class="stat-label">Tenders</span>
+            <span class="stat-value">@Model.Tenders</span>
+            <span class="stat-note">@Model.UpcomingTenders to be tendered, @Model.Consultancy consultancy</span>
         </a>
+    </section>
 
-        <section class="card g5" aria-labelledby="funnelTitle">
-            <div class="card-head"><h3 id="funnelTitle">Sales funnel</h3><small>This financial year</small></div>
-            <div class="funnel" id="funnel"
-                 data-stages='[["Enquiries",@Model.Enquiries],["Quotations",@Model.Quotations],["Positive",@Model.Positive],["Projects",@Model.Projects]]'></div>
-        </section>
-
-        <section class="card g7" aria-labelledby="chartTitle">
-            <div class="card-head">
-                <h3 id="chartTitle">Quoted and won by month</h3><small>Rupees in lakh</small>
-                <div class="sp legend"><span><i style="background:var(--accent)"></i>Quoted</span><span><i style="background:var(--line-2)"></i>Won</span></div>
-            </div>
-            <div class="chart" id="chart"></div>
-        </section>
-
-        <section class="card g5" aria-labelledby="attTitle">
-            <div class="card-head"><h3 id="attTitle">Follow-ups</h3><div class="sp"><a class="link" asp-controller="SalesEnquiries" asp-action="Index">All enquiries</a></div></div>
-            <div class="tabs" id="attTabs">
-                <button type="button" class="warn @(firstTab == "over" ? "on" : "")" data-tab="over">Overdue<b>@Model.Overdue.Count</b></button>
-                <button type="button" class="@(firstTab == "today" ? "on" : "")" data-tab="today">Today<b>@Model.DueToday.Count</b></button>
-                <button type="button" data-tab="soon">Next 7 days<b>@Model.Upcoming.Count</b></button>
+    <div class="dash">
+        <section class="card panel queue g7" aria-labelledby="attTitle">
+            <div class="card-head"><h2 id="attTitle">Follow-ups</h2><div class="sp"><a class="link" asp-controller="SalesEnquiries" asp-action="Index">All enquiries</a></div></div>
+            <div class="tabs" id="attTabs" role="tablist">
+                <button type="button" role="tab" class="warn @(firstTab == "over" ? "on" : "")" aria-selected="@(firstTab == "over" ? "true" : "false")" data-tab="over">Overdue<b>@Model.Overdue.Count</b></button>
+                <button type="button" role="tab" class="@(firstTab == "today" ? "on" : "")" aria-selected="@(firstTab == "today" ? "true" : "false")" data-tab="today">Today<b>@Model.DueToday.Count</b></button>
+                <button type="button" role="tab" aria-selected="false" data-tab="soon">Next 7 days<b>@Model.Upcoming.Count</b></button>
             </div>
 
-            <div class="rows" data-panel="over" hidden="@(firstTab != "over")">
+            <div class="rows" role="tabpanel" data-panel="over" hidden="@(firstTab != "over")">
                 @foreach (var r in Model.Overdue)
                 {
                     <a asp-controller="SalesEnquiries" asp-action="Details" asp-route-id="@r.Id">
                         <span class="when over">@r.Date.ToString("dd MMM")</span>
-                        <div class="t"><strong>@r.Company</strong><small>@r.Place @(r.Place != "" && r.Details != "" ? "·" : "") @r.Details</small></div>
-                        <i class="bi bi-chevron-right" style="color:var(--faint)"></i>
+                        <div class="t"><strong>@r.Company</strong><small>@r.Details</small></div>
+                        <span class="where">@r.Place</span>
+                        <i class="bi bi-chevron-right go" aria-hidden="true"></i>
                     </a>
                 }
                 @if (Model.Overdue.Count == 0)
                 {
-                    <div class="empty"><i class="bi bi-check2-circle"></i>Nothing overdue.</div>
+                    <div class="empty"><i class="bi bi-check2-circle" aria-hidden="true"></i>Nothing overdue.</div>
                 }
             </div>
-            <div class="rows" data-panel="today" hidden="@(firstTab != "today")">
+            <div class="rows" role="tabpanel" data-panel="today" hidden="@(firstTab != "today")">
                 @foreach (var r in Model.DueToday)
                 {
                     <a asp-controller="SalesEnquiries" asp-action="Details" asp-route-id="@r.Id">
                         <span class="when today">Today</span>
-                        <div class="t"><strong>@r.Company</strong><small>@r.Place @(r.Place != "" && r.Details != "" ? "·" : "") @r.Details</small></div>
-                        <i class="bi bi-chevron-right" style="color:var(--faint)"></i>
+                        <div class="t"><strong>@r.Company</strong><small>@r.Details</small></div>
+                        <span class="where">@r.Place</span>
+                        <i class="bi bi-chevron-right go" aria-hidden="true"></i>
                     </a>
                 }
                 @if (Model.DueToday.Count == 0)
                 {
-                    <div class="empty"><i class="bi bi-check2-circle"></i>No follow-ups due today.</div>
+                    <div class="empty"><i class="bi bi-check2-circle" aria-hidden="true"></i>No follow-ups due today.</div>
                 }
             </div>
-            <div class="rows" data-panel="soon" hidden>
+            <div class="rows" role="tabpanel" data-panel="soon" hidden>
                 @foreach (var r in Model.Upcoming)
                 {
                     <a asp-controller="SalesEnquiries" asp-action="Details" asp-route-id="@r.Id">
                         <span class="when">@r.Date.ToString("ddd dd")</span>
-                        <div class="t"><strong>@r.Company</strong><small>@r.Place @(r.Place != "" && r.Details != "" ? "·" : "") @r.Details</small></div>
-                        <i class="bi bi-chevron-right" style="color:var(--faint)"></i>
+                        <div class="t"><strong>@r.Company</strong><small>@r.Details</small></div>
+                        <span class="where">@r.Place</span>
+                        <i class="bi bi-chevron-right go" aria-hidden="true"></i>
                     </a>
                 }
                 @if (Model.Upcoming.Count == 0)
                 {
-                    <div class="empty"><i class="bi bi-calendar3"></i>Nothing scheduled for the next 7 days.</div>
+                    <div class="empty"><i class="bi bi-calendar3" aria-hidden="true"></i>Nothing scheduled for the next 7 days.</div>
                 }
             </div>
         </section>
 
-        <section class="card g7" aria-labelledby="recentTitle">
-            <div class="card-head"><h3 id="recentTitle">Recent enquiries</h3><div class="sp"><a class="link" asp-controller="SalesEnquiries" asp-action="Index">View all</a></div></div>
+        <section class="card panel g5" aria-labelledby="funnelTitle">
+            <div class="card-head"><h2 id="funnelTitle">Sales funnel</h2><small>This financial year</small></div>
+            <ol class="funnel" id="funnel">
+                @foreach (var f in funnel)
+                {
+                    <li class="fr">
+                        <span class="fr-name">@f.Name</span>
+                        <span class="ft" aria-hidden="true"><span class="ff" style="--w: @f.Share"></span></span>
+                        <span class="n num">@f.Count</span>
+                        @if (f.Step != "")
+                        {
+                            <span class="fc">@f.Step</span>
+                        }
+                    </li>
+                }
+            </ol>
+        </section>
+
+        <section class="card panel g7" aria-labelledby="chartTitle">
+            <div class="card-head">
+                <h2 id="chartTitle">Quoted and won by month</h2><small>Rupees in lakh</small>
+                <div class="sp legend"><span><i class="key key-quoted" aria-hidden="true"></i>Quoted</span><span><i class="key key-won" aria-hidden="true"></i>Won</span></div>
+            </div>
+            <div class="chart" id="chart"></div>
+        </section>
+
+        <section class="card panel g5" aria-labelledby="recentTitle">
+            <div class="card-head"><h2 id="recentTitle">Recent enquiries</h2><div class="sp"><a class="link" asp-controller="SalesEnquiries" asp-action="Index">View all</a></div></div>
             <div class="rows">
                 @foreach (var e in Model.RecentEnquiries)
                 {
                     <a asp-controller="SalesEnquiries" asp-action="Details" asp-route-id="@e.Id">
-                        <span class="av">@(e.Title.Length > 1 ? e.Title.Substring(0, 2).ToUpper() : e.Title.ToUpper())</span>
                         <div class="t"><strong>@e.Title</strong><small>@e.Subtitle</small></div>
                         @if (e.Status != "")
                         {
@@ -155,13 +190,13 @@ else
                 }
                 @if (Model.RecentEnquiries.Count == 0)
                 {
-                    <div class="empty"><i class="bi bi-chat-left-text"></i>No enquiries yet this year. Add the first one.</div>
+                    <div class="empty"><i class="bi bi-chat-left-text" aria-hidden="true"></i>No enquiries yet this year. Add the first one.</div>
                 }
             </div>
         </section>
 
-        <section class="card g6" aria-labelledby="projTitle">
-            <div class="card-head"><h3 id="projTitle">Latest work orders</h3><div class="sp"><a class="link" asp-controller="ProjectLists" asp-action="Index">View all</a></div></div>
+        <section class="card panel g6" aria-labelledby="projTitle">
+            <div class="card-head"><h2 id="projTitle">Latest work orders</h2><div class="sp"><a class="link" asp-controller="ProjectLists" asp-action="Index">View all</a></div></div>
             <div class="rows">
                 @foreach (var p in Model.RecentProjects)
                 {
@@ -172,13 +207,13 @@ else
                 }
                 @if (Model.RecentProjects.Count == 0)
                 {
-                    <div class="empty"><i class="bi bi-clipboard-check"></i>No work orders logged yet.</div>
+                    <div class="empty"><i class="bi bi-clipboard-check" aria-hidden="true"></i>No work orders logged yet.</div>
                 }
             </div>
         </section>
 
-        <section class="card g6" aria-labelledby="tenderTitle">
-            <div class="card-head"><h3 id="tenderTitle">Latest tenders</h3><div class="sp"><a class="link" asp-controller="ProjectTenderList" asp-action="Index">View all</a></div></div>
+        <section class="card panel g6" aria-labelledby="tenderTitle">
+            <div class="card-head"><h2 id="tenderTitle">Latest tenders</h2><div class="sp"><a class="link" asp-controller="ProjectTenderList" asp-action="Index">View all</a></div></div>
             <div class="rows">
                 @foreach (var t in Model.RecentTenders)
                 {
@@ -189,7 +224,7 @@ else
                 }
                 @if (Model.RecentTenders.Count == 0)
                 {
-                    <div class="empty"><i class="bi bi-file-ruled"></i>No tenders logged yet.</div>
+                    <div class="empty"><i class="bi bi-file-ruled" aria-hidden="true"></i>No tenders logged yet.</div>
                 }
             </div>
         </section>
@@ -207,7 +242,10 @@ else
                 tabs.addEventListener('click', function (e) {
                     var b = e.target.closest('button');
                     if (!b) { return; }
-                    tabs.querySelectorAll('button').forEach(function (x) { x.classList.toggle('on', x === b); });
+                    tabs.querySelectorAll('button').forEach(function (x) {
+                        x.classList.toggle('on', x === b);
+                        x.setAttribute('aria-selected', x === b ? 'true' : 'false');
+                    });
                     document.querySelectorAll('[data-panel]').forEach(function (p) { p.hidden = p.getAttribute('data-panel') !== b.getAttribute('data-tab'); });
                 });
             }
@@ -223,25 +261,11 @@ else
                 p.className = 'pill pill-' + tone;
             });
 
-            // Funnel
-            var funnel = document.getElementById('funnel');
-            if (funnel) {
-                var stages = JSON.parse(funnel.getAttribute('data-stages')), top = Math.max.apply(null, stages.map(function (s) { return s[1]; })) || 1;
-                funnel.innerHTML = stages.map(function (s, i) {
-                    var next = stages[i + 1], step = !next ? '' : s[1] <= 0 ? 'No data yet' : next[1] > s[1] ? 'More recorded at the next stage' : Math.round(next[1] / s[1] * 100) + '% move forward';
-                    return '<div class="fr"><b>' + s[0] + '</b><div class="ft"><div class="ff" data-w="' + (s[1] / top * 100) + '" style="opacity:' + (1 - i * 0.17) + '"></div></div><span class="n num">' + s[1] + '</span></div>' +
-                        (next ? '<div class="fr"><div class="fc">' + step + '</div></div>' : '');
-                }).join('');
-                setTimeout(function () {
-                    funnel.querySelectorAll('.ff').forEach(function (el) { el.style.width = el.getAttribute('data-w') + '%'; });
-                }, 60);
-            }
-
             // Quoted and won by month
             var chart = document.getElementById('chart');
             if (chart) {
                 if (!months.length || !months.some(function (m) { return m.quoted > 0 || m.won > 0; })) {
-                    chart.innerHTML = '<div class="empty"><i class="bi bi-bar-chart-line"></i>No quotations or work orders with dates yet this year.</div>';
+                    chart.innerHTML = '<div class="empty"><i class="bi bi-bar-chart-line" aria-hidden="true"></i>No quotations or work orders with dates yet this year.</div>';
                     return;
                 }
                 var lakh = function (v) { return v / 100000; };
@@ -250,17 +274,17 @@ else
                 if (max / pow <= 2) { max = Math.ceil(peak / (pow / 2)) * (pow / 2); }
                 var H = 190, L = 42, W = 560, bw = (W - L) / months.length, bar = Math.min(16, bw / 2 - 3);
                 var fmt = function (v) { return v >= 100 ? Math.round(v) : Math.round(v * 10) / 10; };
-                var svg = '<svg viewBox="0 0 ' + W + ' ' + (H + 26) + '" role="img" aria-label="Quoted and won value by month">';
+                var svg = '<svg viewBox="0 0 ' + W + ' ' + (H + 26) + '" role="img" aria-label="Quoted and won value by month, in lakh rupees">';
                 [0, 0.25, 0.5, 0.75, 1].forEach(function (f) {
                     var y = H - f * (H - 10);
-                    svg += '<line x1="' + L + '" x2="' + W + '" y1="' + y + '" y2="' + y + '" stroke="var(--line)" stroke-width="1"/>' +
-                        '<text x="' + (L - 8) + '" y="' + (y + 4) + '" text-anchor="end" font-size="11" fill="var(--faint)">' + fmt(max * f) + '</text>';
+                    svg += '<line class="grid-line" x1="' + L + '" x2="' + W + '" y1="' + y + '" y2="' + y + '" stroke-width="1"/>' +
+                        '<text class="axis" x="' + (L - 8) + '" y="' + (y + 4) + '" text-anchor="end">' + fmt(max * f) + '</text>';
                 });
-                months.forEach(function (m, i) {
-                    var x = L + i * bw + bw / 2, hq = lakh(m.quoted) / max * (H - 10), hw = lakh(m.won) / max * (H - 10);
-                    svg += '<rect x="' + (x - bar - 1) + '" y="' + (H - hq) + '" width="' + bar + '" height="' + hq + '" rx="3" fill="var(--accent)"><title>' + m.label + ': quoted ₹' + fmt(lakh(m.quoted)) + ' L</title></rect>' +
-                        '<rect x="' + (x + 1) + '" y="' + (H - hw) + '" width="' + bar + '" height="' + hw + '" rx="3" fill="var(--line-2)"><title>' + m.label + ': won ₹' + fmt(lakh(m.won)) + ' L</title></rect>' +
-                        '<text x="' + x + '" y="' + (H + 18) + '" text-anchor="middle" font-size="11.5" fill="var(--muted)">' + m.label + '</text>';
+                months.forEach(function (m) {
+                    var i = months.indexOf(m), x = L + i * bw + bw / 2, hq = lakh(m.quoted) / max * (H - 10), hw = lakh(m.won) / max * (H - 10);
+                    svg += '<rect class="bar-quoted" x="' + (x - bar - 1) + '" y="' + (H - hq) + '" width="' + bar + '" height="' + hq + '" rx="3"><title>' + m.label + ': quoted ₹' + fmt(lakh(m.quoted)) + ' L</title></rect>' +
+                        '<rect class="bar-won" x="' + (x + 1) + '" y="' + (H - hw) + '" width="' + bar + '" height="' + hw + '" rx="3"><title>' + m.label + ': won ₹' + fmt(lakh(m.won)) + ' L</title></rect>' +
+                        '<text class="axis" x="' + x + '" y="' + (H + 18) + '" text-anchor="middle">' + m.label + '</text>';
                 });
                 chart.innerHTML = svg + '</svg>';
             }

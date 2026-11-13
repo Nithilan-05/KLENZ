@@ -1,14 +1,19 @@
 ﻿@model KLENZ.Models.QuotationReport
 
 @{
-    ViewData["Title"] = "Delete Quotation Report";
+    ViewData["Title"] = "Delete quotation";
 }
 
-<div class="card shadow-lg mt-3">
-    <div class="card-header bg-danger bg-opacity-75 text-white d-flex align-items-center">
-        <i class="bi bi-trash3-fill me-2 fs-4"></i>
-        <h4 class="mb-0">Delete Quotation Report</h4>
+<a asp-action="Index" class="back-link"><i class="bi bi-arrow-left" aria-hidden="true"></i>Back to quotations</a>
+<div class="page-head">
+    <div class="page-title">
+        <div>
+            <h1>Delete quotation</h1>
+        </div>
     </div>
+</div>
+
+<div class="card detail-card">
 
     <div class="card-body">
         <div class="alert alert-danger">
@@ -16,76 +21,31 @@
             <strong>Warning:</strong> Are you sure you want to delete this quotation report? This action cannot be undone.
         </div>
 
-        <dl class="row">
-            <dt class="col-sm-3 fw-bold">
-                <i class="bi bi-calendar"></i> @Html.DisplayNameFor(model => model.QuotationDate)
-            </dt>
-            <dd class="col-sm-9">
-                @Html.DisplayFor(model => model.QuotationDate)
-            </dd>
+        <dl class="facts">
+            <div class="fact"><dt><i class="bi bi-calendar"></i> @Html.DisplayNameFor(model => model.QuotationDate)</dt><dd>@Html.DisplayFor(model => model.QuotationDate)</dd></div>
 
-            <dt class="col-sm-3 fw-bold">
-                <i class="bi bi-buildings"></i> @Html.DisplayNameFor(model => model.CompanyNameStr)
-            </dt>
-            <dd class="col-sm-9">
-                @(Model.Company?.ShortName ?? "N/A")
-            </dd>
+            <div class="fact"><dt><i class="bi bi-buildings"></i> @Html.DisplayNameFor(model => model.CompanyNameStr)</dt><dd>@(Model.Company?.ShortName ?? "N/A")</dd></div>
 
-            <dt class="col-sm-3 fw-bold">
-                <i class="bi bi-card-list"></i> @Html.DisplayNameFor(model => model.ProductDetails)
-            </dt>
-            <dd class="col-sm-9">
-                @Html.DisplayFor(model => model.ProductDetails)
-            </dd>
+            <div class="fact"><dt><i class="bi bi-card-list"></i> @Html.DisplayNameFor(model => model.ProductDetails)</dt><dd>@Html.DisplayFor(model => model.ProductDetails)</dd></div>
 
-            <dt class="col-sm-3 fw-bold">
-                <i class="bi bi-person"></i> @Html.DisplayNameFor(model => model.CustomerDetails)
-            </dt>
-            <dd class="col-sm-9">
-                @Html.DisplayFor(model => model.CustomerDetails)
-            </dd>
+            <div class="fact"><dt><i class="bi bi-person"></i> @Html.DisplayNameFor(model => model.CustomerDetails)</dt><dd>@Html.DisplayFor(model => model.CustomerDetails)</dd></div>
 
-            <dt class="col-sm-3 fw-bold">
-                <i class="bi bi-cash-stack"></i> @Html.DisplayNameFor(model => model.QuotationValue)
-            </dt>
-            <dd class="col-sm-9">
-                @Html.DisplayFor(model => model.QuotationValue)
-            </dd>
+            <div class="fact"><dt><i class="bi bi-cash-stack"></i> @Html.DisplayNameFor(model => model.QuotationValue)</dt><dd>@Html.DisplayFor(model => model.QuotationValue)</dd></div>
 
-            <dt class="col-sm-3 fw-bold">
-                <i class="bi bi-chat-left-text"></i> @Html.DisplayNameFor(model => model.Remarks)
-            </dt>
-            <dd class="col-sm-9">
-                @Html.DisplayFor(model => model.Remarks)
-            </dd>
+            <div class="fact"><dt><i class="bi bi-chat-left-text"></i> @Html.DisplayNameFor(model => model.Remarks)</dt><dd>@Html.DisplayFor(model => model.Remarks)</dd></div>
 
-            <dt class="col-sm-3 fw-bold">
-                <i class="bi bi-check-circle"></i> @Html.DisplayNameFor(model => model.IsPositive)
-            </dt>
-            <dd class="col-sm-9">
-                @(Model.IsPositiveBool ? "Yes" : "No")
-            </dd>
+            <div class="fact"><dt><i class="bi bi-check-circle"></i> @Html.DisplayNameFor(model => model.IsPositive)</dt><dd>@(Model.IsPositiveBool ? "Yes" : "No")</dd></div>
 
-            <dt class="col-sm-3 fw-bold">
-                <i class="bi bi-clock-history"></i> @Html.DisplayNameFor(model => model.CreatedDateTime)
-            </dt>
-            <dd class="col-sm-9">
-                @Html.DisplayFor(model => model.CreatedDateTime)
-            </dd>
+            <div class="fact"><dt><i class="bi bi-clock-history"></i> @Html.DisplayNameFor(model => model.CreatedDateTime)</dt><dd>@Html.DisplayFor(model => model.CreatedDateTime)</dd></div>
 
-            <dt class="col-sm-3 fw-bold">
-                <i class="bi bi-person-badge"></i> @Html.DisplayNameFor(model => model.CreatedUserId)
-            </dt>
-            <dd class="col-sm-9">
-                @Html.DisplayFor(model => model.CreatedUserId)
-            </dd>
+            <div class="fact"><dt><i class="bi bi-person-badge"></i> @Html.DisplayNameFor(model => model.CreatedUserId)</dt><dd>@Html.DisplayFor(model => model.CreatedUserId)</dd></div>
         </dl>
     </div>
 
     <div class="card-footer d-flex">
         <form asp-action="Delete" method="post" class="w-100">
             <input type="hidden" asp-for="Id" />
-            <div class="d-flex justify-content-between w-100">
+            <div class="form-actions">
                 <button type="submit" class="btn btn-danger">
                     <i class="bi bi-trash-fill"></i> Delete
                 </button>

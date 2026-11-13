@@ -1,23 +1,28 @@
 ﻿@model KLENZ.Models.ProjectList
 
 @{
-    ViewData["Title"] = "Create Project";
+    ViewData["Title"] = "New project";
 }
 
 <script src="~/js/custom_form.js"></script>
 
-<div class="card rounded-card shadow-lg mt-3">
-    <div class="card-header bg-primary bg-opacity-75 text-white rounded-top d-flex align-items-center">
-        <i class="bi bi-folder-plus me-2 fs-4"></i>
-        <h4 class="mb-0">Create New Project</h4>
+<a asp-action="Index" class="back-link"><i class="bi bi-arrow-left" aria-hidden="true"></i>Back to project list</a>
+<div class="page-head">
+    <div class="page-title">
+        <div>
+            <h1>New project</h1>
+        </div>
     </div>
+</div>
+
+<div class="card form-card">
 
     <div class="card-body">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             <div class="row g-3">
-                <div class="col-md-6">
+                <div class="form-col">
                     <label asp-for="FyYear" class="form-label fw-bold"></label>
                     <select asp-for="FyYear" class="form-select" asp-items="ViewBag.FyYear">
                         <option value="">-- Select Financial Year --</option>
@@ -25,7 +30,7 @@
                     <span asp-validation-for="FyYear" class="text-danger"></span>
                 </div>
 
-                <div class="col-md-6">
+                <div class="form-col">
                     <label asp-for="WorkOrderDate" class="form-label fw-bold"></label>
                     <div class="input-group">
                         <span class="input-group-text date-picker-group"><i class="bi bi-calendar"></i></span>
@@ -34,7 +39,7 @@
                     <span asp-validation-for="WorkOrderDate" class="text-danger"></span>
                 </div>
 
-                <div class="col-md-6">
+                <div class="form-col">
                     <label asp-for="CompanyNameId" class="form-label fw-bold"></label>
                     <select asp-for="CompanyNameId" class="form-control" asp-items="ViewBag.Companies">
                         <option value="">-- Select Company --</option>
@@ -42,19 +47,19 @@
                     <span asp-validation-for="CompanyNameId" class="text-danger"></span>
                 </div>
 
-                <div class="col-md-6">
+                <div class="form-col">
                     <label asp-for="CustomerDetails" class="form-label fw-bold"></label>
                     <input asp-for="CustomerDetails" class="form-control" placeholder="Enter customer details" />
                     <span asp-validation-for="CustomerDetails" class="text-danger"></span>
                 </div>
 
-                <div class="col-md-6">
+                <div class="form-col">
                     <label asp-for="WorkDetails" class="form-label fw-bold"></label>
                     <input asp-for="WorkDetails" class="form-control" placeholder="Enter work details" />
                     <span asp-validation-for="WorkDetails" class="text-danger"></span>
                 </div>
 
-                <div class="col-md-6">
+                <div class="form-col">
                     <label asp-for="WorkOrderValue" class="form-label fw-bold"></label>
                     <div class="input-group">
                         <span class="input-group-text fw-bold">₹</span>
@@ -63,7 +68,7 @@
                     <span asp-validation-for="WorkOrderValue" class="text-danger"></span>
                 </div>
 
-                <div class="col-md-6">
+                <div class="form-col">
                     <label asp-for="Remarks" class="form-label fw-bold"></label>
                     <textarea asp-for="Remarks" class="form-control" rows="2" placeholder="Enter remarks"></textarea>
                     <span asp-validation-for="Remarks" class="text-danger"></span>

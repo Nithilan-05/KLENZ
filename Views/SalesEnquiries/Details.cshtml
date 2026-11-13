@@ -1,55 +1,45 @@
 ﻿@model KLENZ.Models.SalesEnquiry
 
 @{
-    ViewData["Title"] = "Sales Enquiry Details";
+    ViewData["Title"] = "Sales enquiry details";
 }
 
-<div class="card shadow-lg rounded-card">
-    <div class="card-header bg-info bg-opacity-75 text-white">
-        <h4 class="mb-0">Sales Enquiry Details</h4>
-    </div>
-    <div class="card-body">
-        <dl class="row">
-            <dt class="col-md-2 fw-bold">Company Name</dt>
-            <dd class="col-md-4">@Html.DisplayFor(model => model.CompanyNameStr)</dd>
-
-            <dt class="col-md-2 fw-bold">Referred By</dt>
-            <dd class="col-md-4">@Html.DisplayFor(model => model.ReferedBy)</dd>
-
-            <dt class="col-md-2 fw-bold">Enquiry Details</dt>
-            <dd class="col-md-4">@Html.DisplayFor(model => model.EnquiryDetails)</dd>
-
-            <dt class="col-md-2 fw-bold">Enquiry Date</dt>
-            <dd class="col-md-4">@Model.EnquiryDate?.ToString("dd/MM/yyyy")</dd>
-
-            <dt class="col-md-2 fw-bold">Customer Details</dt>
-            <dd class="col-md-4">@Html.DisplayFor(model => model.CustomerDetails)</dd>
-
-            <dt class="col-md-2 fw-bold">Status</dt>
-            <dd class="col-md-4">@Html.DisplayFor(model => model.Status)</dd>
-
-            <dt class="col-md-2 fw-bold">Remarks</dt>
-            <dd class="col-md-4">@Html.DisplayFor(model => model.Remarks)</dd>
-
-            <dt class="col-md-2 fw-bold">Reminder Date</dt>
-            <dd class="col-md-4">@Model.ReminderDate?.ToShortDateString()</dd>
-
-            <dt class="col-md-2 fw-bold">Reminder Place</dt>
-            <dd class="col-md-4">@Html.DisplayFor(model => model.ReminderPlace)</dd>
-
-            <dt class="col-sm-2">Created Date & Time</dt>
-            <dd class="col-sm-4"> @(Model.CreatedDateTime.HasValue ? Model.CreatedDateTime.Value.ToString("dd/MM/yyyy HH:mm") : "N/A")</dd>
-
-            <dt class="col-sm-2">Created By</dt>
-            <dd class="col-sm-4">@Model.CreatedUserName</dd>
-        </dl>
-
-        <!-- Buttons with proper spacing -->
-        <div class="row">
-            <div class="col-md-12 d-flex justify-content-between">
-                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
-                <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary">Edit</a>
-            </div>
+<a asp-action="Index" class="back-link"><i class="bi bi-arrow-left" aria-hidden="true"></i>Back to enquiries</a>
+<div class="page-head">
+    <div class="page-title">
+        <div>
+            <h1>Sales enquiry details</h1>
         </div>
+    </div>
+    <div class="page-actions">
+        <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary"><i class="bi bi-pencil" aria-hidden="true"></i>Edit</a>
+    </div>
+</div>
+
+<div class="card detail-card">
+    <div class="card-body">
+        <dl class="facts">
+            <div class="fact"><dt>Company Name</dt><dd>@Html.DisplayFor(model => model.CompanyNameStr)</dd></div>
+
+            <div class="fact"><dt>Referred By</dt><dd>@Html.DisplayFor(model => model.ReferedBy)</dd></div>
+
+            <div class="fact"><dt>Enquiry Details</dt><dd>@Html.DisplayFor(model => model.EnquiryDetails)</dd></div>
+
+            <div class="fact"><dt>Enquiry Date</dt><dd>@Model.EnquiryDate?.ToString("dd/MM/yyyy")</dd></div>
+
+            <div class="fact"><dt>Customer Details</dt><dd>@Html.DisplayFor(model => model.CustomerDetails)</dd></div>
+
+            <div class="fact"><dt>Status</dt><dd>@Html.DisplayFor(model => model.Status)</dd></div>
+
+            <div class="fact"><dt>Remarks</dt><dd>@Html.DisplayFor(model => model.Remarks)</dd></div>
+
+            <div class="fact"><dt>Reminder Date</dt><dd>@Model.ReminderDate?.ToShortDateString()</dd></div>
+
+            <div class="fact"><dt>Reminder Place</dt><dd>@Html.DisplayFor(model => model.ReminderPlace)</dd></div>
+
+            <div class="fact"><dt>Created Date & Time</dt><dd>@(Model.CreatedDateTime.HasValue ? Model.CreatedDateTime.Value.ToString("dd/MM/yyyy HH:mm") : "N/A")</dd></div>
+
+            <div class="fact"><dt>Created By</dt><dd>@Model.CreatedUserName</dd></div>
+        </dl>
     </div>
 </div>

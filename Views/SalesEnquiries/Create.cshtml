@@ -14,7 +14,7 @@
 }
 
 @{
-    ViewData["Title"] = "Sales Enquiry";
+    ViewData["Title"] = "New sales enquiry";
 }
 @* @section Styles {
     <style>
@@ -62,27 +62,24 @@
     </style>
 } *@
 
-<div class="card shadow-lg">
-    <div class="card-header bg-primary bg-opacity-75 text-white d-flex">
-        <div class="ms-3">
-            <a asp-action="Index" class="btn btn-white ms-lg-5">
-                <i class="bi bi-arrow-left-circle text-primary"></i> Back to List
-            </a>
-        </div>
-        <div class="flex-grow-1">
-            <h4 class="mt-1 text-white ms-4">Create Sales Enquiry</h4>
-        </div>
-        <div class="flex-grow-1">
-            <h5 class="mt-1 text-white ms-4">Active Financial year "@ViewBag.ActiveFinancialYear"</h5>
+<a asp-action="Index" class="back-link"><i class="bi bi-arrow-left" aria-hidden="true"></i>Back to enquiries</a>
+<div class="page-head">
+    <div class="page-title">
+        <div>
+            <h1>New sales enquiry</h1>
+            <p class="page-sub">Financial year @ViewBag.ActiveFinancialYear</p>
         </div>
     </div>
+</div>
+
+<div class="card form-card">
 
     <div class="card-body">
         <form asp-action="Create" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-            <div class="row d-flex justify-content-center">
-                <div class="col-md-4">
+            <div class="form-cols">
+                <div class="form-col">
                     <div class="mb-3">
                         <label asp-for="CompanyNameId" class="form-label fw-bold  mb-1 text-start d-block"></label>
                         <select asp-for="CompanyNameId" class="form-control form-select" asp-items="ViewBag.Companies">
@@ -116,7 +113,7 @@
                 </div>
 
                 <!-- Right Column -->
-                <div class="col-md-4">
+                <div class="form-col">
                     <div class="mb-3">
                         <label asp-for="Status" class="form-label fw-bold mb-1 text-start d-block"></label>
                         <input asp-for="Status" autocomplete="off" class="form-control" list="statusOptions" placeholder="Choose or type a status" />
@@ -154,7 +151,7 @@
                 </div>
             </div>
 
-            <div class="button-group mt-2 d-flex justify-content-center gap-4">
+            <div class="form-actions">
                 <button type="submit" class="btn btn-primary">
                     <i class="bi bi-plus-circle"></i> Create
                 </button>

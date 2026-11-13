@@ -2,20 +2,26 @@
 @model PositiveEnquiry
 
 @{
-    ViewData["Title"] = "Create Positive Enquiry";
+    ViewData["Title"] = "New positive enquiry";
 }
 
-<div class="card shadow-lg rounded-card">
-    <div class="card-header bg-primary bg-opacity-75 text-white">
-        <h4 class="mb-0">Create Positive Enquiry</h4>
+<a asp-action="Index" class="back-link"><i class="bi bi-arrow-left" aria-hidden="true"></i>Back to positive enquiries</a>
+<div class="page-head">
+    <div class="page-title">
+        <div>
+            <h1>New positive enquiry</h1>
+        </div>
     </div>
+</div>
+
+<div class="card form-card">
     <div class="card-body">
         <form asp-action="Create" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             <div class="row">
                 <!-- Left Column -->
-                <div class="col-md-6">
+                <div class="form-col">
                     <div class="mb-3">
                         <label asp-for="QuotationDate" class="fw-bold"></label>
                         <input asp-for="QuotationDate" type="date" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
@@ -36,7 +42,7 @@
                 </div>
 
                 <!-- Right Column -->
-                <div class="col-md-6">
+                <div class="form-col">
                     <div class="mb-3">
                         <label asp-for="QuotationValue" class="fw-bold"></label>
                         <input asp-for="QuotationValue" class="form-control" type="number" step="0.01" min="0" max="9999999999999999.99" placeholder="Enter quotation value" />
@@ -61,8 +67,8 @@
             </div>
 
             <div class="row mt-3">
-                <div class="col-md-12 d-flex justify-content-between">
-                    <a asp-action="Index" class="btn btn-secondary"><i class="bi bi-arrow-left"></i> Back to List</a>
+                <div class="form-actions">
+                    <a asp-action="Index" class="btn btn-ghost">Cancel</a>
                     <button type="submit" class="btn btn-primary"><i class="bi bi-check-circle"></i> Create</button>
                 </div>
             </div>

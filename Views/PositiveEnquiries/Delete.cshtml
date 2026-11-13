@@ -2,49 +2,46 @@
 @model PositiveEnquiry
 
 @{
-    ViewData["Title"] = "Delete Positive Enquiry";
+    ViewData["Title"] = "Delete positive enquiry";
 }
 
-<div class="card shadow-lg rounded-card">
-    <div class="card-header bg-danger bg-opacity-75 text-white">
-        <h4 class="mb-0">Delete Positive Enquiry</h4>
+<a asp-action="Index" class="back-link"><i class="bi bi-arrow-left" aria-hidden="true"></i>Back to positive enquiries</a>
+<div class="page-head">
+    <div class="page-title">
+        <div>
+            <h1>Delete positive enquiry</h1>
+        </div>
     </div>
+</div>
+
+<div class="card detail-card">
     <div class="card-body">
-        <h5 class="text-danger">Are you sure you want to delete this record?</h5>
-        <hr />
+        <p class="notice notice-danger"><i class="bi bi-exclamation-triangle" aria-hidden="true"></i>Are you sure you want to delete this record?</p>
 
         <!-- Bootstrap Grid for Displaying Fields -->
-        <dl class="row">
-            <dt class="col-md-2 fw-bold">Quotation Date</dt>
-            <dd class="col-md-4">@Model.QuotationDate?.ToString("dd/MM/yyyy")</dd>
+        <dl class="facts">
+            <div class="fact"><dt>Quotation Date</dt><dd>@Model.QuotationDate?.ToString("dd/MM/yyyy")</dd></div>
 
-            <dt class="col-md-2 fw-bold">Company Name</dt>
-            <dd class="col-md-4">@Html.DisplayFor(model => model.CompanyNameStr)</dd>
+            <div class="fact"><dt>Company Name</dt><dd>@Html.DisplayFor(model => model.CompanyNameStr)</dd></div>
 
-            <dt class="col-md-2 fw-bold">Product Details</dt>
-            <dd class="col-md-4">@Html.DisplayFor(model => model.ProductDetails)</dd>
+            <div class="fact"><dt>Product Details</dt><dd>@Html.DisplayFor(model => model.ProductDetails)</dd></div>
 
-            <dt class="col-md-2 fw-bold">Customer Details</dt>
-            <dd class="col-md-4">@Html.DisplayFor(model => model.CustomerDetails)</dd>
+            <div class="fact"><dt>Customer Details</dt><dd>@Html.DisplayFor(model => model.CustomerDetails)</dd></div>
 
-            <dt class="col-md-2 fw-bold">Quotation Value</dt>
-            <dd class="col-md-4">@Html.DisplayFor(model => model.QuotationValue)</dd>
+            <div class="fact"><dt>Quotation Value</dt><dd>@Html.DisplayFor(model => model.QuotationValue)</dd></div>
 
-            <dt class="col-md-2 fw-bold">Current Status</dt>
-            <dd class="col-md-4">@Html.DisplayFor(model => model.CurrentStatus)</dd>
+            <div class="fact"><dt>Current Status</dt><dd>@Html.DisplayFor(model => model.CurrentStatus)</dd></div>
 
-            <dt class="col-md-2 fw-bold">Created Date</dt>
-            <dd class="col-md-4">@Model.CreatedDateTime?.ToString("dd/MM/yyyy HH:mm")</dd>
+            <div class="fact"><dt>Created Date</dt><dd>@Model.CreatedDateTime?.ToString("dd/MM/yyyy HH:mm")</dd></div>
 
-            <dt class="col-md-2 fw-bold">Created User</dt>
-            <dd class="col-md-4">@Html.DisplayFor(model => model.CreatedUserId)</dd>
+            <div class="fact"><dt>Created User</dt><dd>@Html.DisplayFor(model => model.CreatedUserId)</dd></div>
         </dl>
 
         <!-- Buttons with proper spacing -->
         <form asp-action="Delete">
             <input type="hidden" asp-for="Id" />
-            <div class="row">
-                <div class="col-md-12 d-flex justify-content-between">
+            <div class="form-cols">
+                <div class="form-actions">
                     <a asp-action="Index" class="btn btn-secondary">Back to List</a>
                     <input type="submit" value="Delete" class="btn btn-danger" />
                 </div>
