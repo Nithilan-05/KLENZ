@@ -1,22 +1,28 @@
 @model KLENZ.Models.FinancialYear
 
 @{
-    ViewData["Title"] = "Edit Financial Year";
+    ViewData["Title"] = "Edit financial year";
 }
 
-<div class="card shadow-lg rounded-card border-0">
-    <div class="card-header bg-warning text-white text-center py-2">
-        <h5 class="mb-0">Edit Financial Year</h5>
+<a asp-action="Index" class="back-link"><i class="bi bi-arrow-left" aria-hidden="true"></i>Back to financial years</a>
+<div class="page-head">
+    <div class="page-title">
+        <div>
+            <h1>Edit financial year</h1>
+        </div>
     </div>
+</div>
 
-    <div class="card-body p-3">
+<div class="card form-card">
+
+    <div class="card-body">
         <form asp-action="Edit" class="needs-validation" novalidate>
             <div asp-validation-summary="ModelOnly" class="alert alert-danger d-none"></div>
             <input type="hidden" asp-for="Id" />
 
             <div class="row align-items-center mb-3">
                 <label asp-for="StartDate" class="col-md-4 col-form-label fw-bold text-md-end"></label>
-                <div class="col-md-4">
+                <div class="form-col">
                     <input asp-for="StartDate" type="date" class="form-control border-warning shadow-sm" required />
                     <span asp-validation-for="StartDate" class="text-danger"></span>
                 </div>
@@ -24,7 +30,7 @@
 
             <div class="row align-items-center mb-3">
                 <label asp-for="EndDate" class="col-md-4 col-form-label fw-bold text-md-end"></label>
-                <div class="col-md-4">
+                <div class="form-col">
                     <input asp-for="EndDate" type="date" class="form-control border-warning shadow-sm" required />
                     <span asp-validation-for="EndDate" class="text-danger"></span>
                 </div>
@@ -41,7 +47,7 @@
                 </div>
             </div>
 
-            <div class="d-flex justify-content-center gap-3">
+            <div class="form-actions">
                 <a asp-action="Index" class="btn btn-outline-secondary px-4">Cancel</a>
                 <button type="submit" class="btn btn-warning px-4">Save</button>
             </div>

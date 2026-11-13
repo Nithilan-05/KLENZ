@@ -1,88 +1,41 @@
 ﻿@model KLENZ.Models.ProjectList
 
 @{
-    ViewData["Title"] = "Project Details";
+    ViewData["Title"] = "Project details";
 }
 
-<div class="card rounded-card shadow-lg mt-3">
-    <div class="card-header bg-info bg-opacity-75 text-dark rounded-top d-flex align-items-center">
-        <i class="bi bi-card-list me-2 fs-4"></i>
-        <h4 class="mb-0">Project Details</h4>
+<a asp-action="Index" class="back-link"><i class="bi bi-arrow-left" aria-hidden="true"></i>Back to project list</a>
+<div class="page-head">
+    <div class="page-title">
+        <div>
+            <h1>Project details</h1>
+        </div>
     </div>
+    <div class="page-actions">
+        <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary"><i class="bi bi-pencil" aria-hidden="true"></i>Edit</a>
+    </div>
+</div>
+
+<div class="card detail-card">
 
     <div class="card-body">
-        <dl class="row">
-            <dt class="col-sm-3 fw-bold">
-                <i class="bi bi-calendar"></i> @Html.DisplayNameFor(model => model.WorkOrderDate)
-            </dt>
-            <dd class="col-sm-9">
-                @Html.DisplayFor(model => model.WorkOrderDate)
-            </dd>
+        <dl class="facts">
+            <div class="fact"><dt><i class="bi bi-calendar"></i> @Html.DisplayNameFor(model => model.WorkOrderDate)</dt><dd>@Html.DisplayFor(model => model.WorkOrderDate)</dd></div>
 
-            <dt class="col-sm-3 fw-bold">
-                <i class="bi bi-buildings"></i> @Html.DisplayNameFor(model => model.CompanyNameStr)
-            </dt>
-            <dd class="col-sm-9">
-                @Html.DisplayFor(model => model.CompanyNameStr)
-            </dd>
+            <div class="fact"><dt><i class="bi bi-buildings"></i> @Html.DisplayNameFor(model => model.CompanyNameStr)</dt><dd>@Html.DisplayFor(model => model.CompanyNameStr)</dd></div>
 
-            <dt class="col-sm-3 fw-bold">
-                <i class="bi bi-person"></i> @Html.DisplayNameFor(model => model.CustomerDetails)
-            </dt>
-            <dd class="col-sm-9">
-                @Html.DisplayFor(model => model.CustomerDetails)
-            </dd>
+            <div class="fact"><dt><i class="bi bi-person"></i> @Html.DisplayNameFor(model => model.CustomerDetails)</dt><dd>@Html.DisplayFor(model => model.CustomerDetails)</dd></div>
 
-            <dt class="col-sm-3 fw-bold">
-                <i class="bi bi-list-task"></i> @Html.DisplayNameFor(model => model.WorkDetails)
-            </dt>
-            <dd class="col-sm-9">
-                @Html.DisplayFor(model => model.WorkDetails)
-            </dd>
+            <div class="fact"><dt><i class="bi bi-list-task"></i> @Html.DisplayNameFor(model => model.WorkDetails)</dt><dd>@Html.DisplayFor(model => model.WorkDetails)</dd></div>
 
-            <dt class="col-sm-3 fw-bold">
-                <i class="bi bi-cash-stack"></i> @Html.DisplayNameFor(model => model.WorkOrderValue)
-            </dt>
-            <dd class="col-sm-9">
-                @Html.DisplayFor(model => model.WorkOrderValue)
-            </dd>
+            <div class="fact"><dt><i class="bi bi-cash-stack"></i> @Html.DisplayNameFor(model => model.WorkOrderValue)</dt><dd>@Html.DisplayFor(model => model.WorkOrderValue)</dd></div>
 
-            <dt class="col-sm-3 fw-bold">
-                <i class="bi bi-chat-left-text"></i> @Html.DisplayNameFor(model => model.Remarks)
-            </dt>
-            <dd class="col-sm-9">
-                @Html.DisplayFor(model => model.Remarks)
-            </dd>
+            <div class="fact"><dt><i class="bi bi-chat-left-text"></i> @Html.DisplayNameFor(model => model.Remarks)</dt><dd>@Html.DisplayFor(model => model.Remarks)</dd></div>
 
-            <dt class="col-sm-3 fw-bold">
-                <i class="bi bi-clock-history"></i> @Html.DisplayNameFor(model => model.CreatedDateTime)
-            </dt>
-            <dd class="col-sm-9">
-                @Html.DisplayFor(model => model.CreatedDateTime)
-            </dd>
+            <div class="fact"><dt><i class="bi bi-clock-history"></i> @Html.DisplayNameFor(model => model.CreatedDateTime)</dt><dd>@Html.DisplayFor(model => model.CreatedDateTime)</dd></div>
 
-            <dt class="col-sm-3 fw-bold">
-                <i class="bi bi-person-badge"></i> @Html.DisplayNameFor(model => model.CreatedUserName)
-            </dt>
-            <dd class="col-sm-9">
-                @Html.DisplayFor(model => model.CreatedUserName)
-            </dd>
+            <div class="fact"><dt><i class="bi bi-person-badge"></i> @Html.DisplayNameFor(model => model.CreatedUserName)</dt><dd>@Html.DisplayFor(model => model.CreatedUserName)</dd></div>
 
-            <dt class="col-sm-3 fw-bold">
-                <i class="bi bi-calendar-event"></i> @Html.DisplayNameFor(model => model.FinancialYearStr)
-            </dt>
-            <dd class="col-sm-9">
-                @Html.DisplayFor(model => model.FinancialYearStr)
-            </dd>
+            <div class="fact"><dt><i class="bi bi-calendar-event"></i> @Html.DisplayNameFor(model => model.FinancialYearStr)</dt><dd>@Html.DisplayFor(model => model.FinancialYearStr)</dd></div>
         </dl>
-    </div>
-
-    <div class="card-footer d-flex justify-content-between">
-        <a asp-action="Index" class="btn btn-outline-secondary">
-            <i class="bi bi-arrow-left-circle"></i> Back to List
-        </a>
-        <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-info text-white">
-            <i class="bi bi-pencil-square"></i> Edit Project
-        </a>
-    </div>
 </div>

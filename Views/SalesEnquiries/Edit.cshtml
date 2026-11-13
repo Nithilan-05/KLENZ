@@ -14,13 +14,19 @@
 }
 
 @{
-    ViewData["Title"] = "Edit Sales Enquiry";
+    ViewData["Title"] = "Edit sales enquiry";
 }
 
-<div class="card shadow-lg rounded-card">
-    <div class="card-header bg-primary bg-opacity-75 text-white">
-        <h4 class="mb-0">Edit Sales Enquiry</h4>
+<a asp-action="Index" class="back-link"><i class="bi bi-arrow-left" aria-hidden="true"></i>Back to enquiries</a>
+<div class="page-head">
+    <div class="page-title">
+        <div>
+            <h1>Edit sales enquiry</h1>
+        </div>
     </div>
+</div>
+
+<div class="card form-card">
     <div class="card-body">
         <form asp-action="Edit" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -28,7 +34,7 @@
 
             <div class="row">
                 <!-- Left Column -->
-                <div class="col-md-6">
+                <div class="form-col">
                     <div class="mb-3">
                         <label asp-for="CompanyNameId" class="fw-bold"></label>
                         <select asp-for="CompanyNameId" class="form-control" asp-items="ViewBag.Companies">
@@ -63,7 +69,7 @@
                 </div>
 
                 <!-- Right Column -->
-                <div class="col-md-6">
+                <div class="form-col">
                     <div class="mb-3">
                         <label asp-for="Status" class="fw-bold"></label>
                         <input asp-for="Status" autocomplete="off" class="form-control" list="statusOptions" placeholder="Choose or type a status" />
@@ -115,8 +121,8 @@
 
             <!-- Buttons Row -->
             <div class="row mt-3">
-                <div class="col-md-12 d-flex justify-content-between">
-                    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+                <div class="form-actions">
+                    <a asp-action="Index" class="btn btn-ghost">Cancel</a>
                     <input type="submit" value="Save Changes" class="btn btn-primary" />
                 </div>
             </div>

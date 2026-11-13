@@ -77,6 +77,8 @@ def find_block(s, start):
 REM = [dict(Id=i + 1, Company=COMPANIES[i], Place=['Site visit', 'Phone call', 'Head office'][i % 3], Details=WORK[i]) for i in range(6)]
 MODEL = {
     'Overdue': REM[:1], 'DueToday': REM[1:3], 'Upcoming': REM[3:6],
+    'funnel': [dict(Name='Enquiries', Count=128, Share='1', Step='45% move forward'), dict(Name='Quotations', Count=57, Share='0.445', Step='40% move forward'),
+               dict(Name='Positive', Count=23, Share='0.18', Step='61% move forward'), dict(Name='Projects', Count=14, Share='0.109', Step='')],
     'RecentEnquiries': [dict(Id=i, Title=COMPANIES[i], Subtitle=WORK[i], Status=STATUS[i]) for i in range(6)],
     'RecentProjects': [dict(Id=i, Title=COMPANIES[i + 4], Subtitle=WORK[i + 2], Amount=MONEY[i]) for i in range(5)],
     'RecentTenders': [dict(Id=i, Title=['Municipal STP chemicals', 'Thermal plant DM water', 'Textile park CETP polymer', 'Refinery cooling water'][i], Subtitle=WORK[i + 3], Amount=MONEY[i + 1]) for i in range(4)],

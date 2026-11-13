@@ -1,42 +1,40 @@
 @model KLENZ.Models.FinancialYear
 
 @{
-    ViewData["Title"] = "Financial Year Details";
+    ViewData["Title"] = "Financial year details";
 }
 
-<div class="card shadow-lg rounded-card border-0">
-    <div class="card-header bg-info text-white py-2">
-        <h5 class="mb-0">Financial Year Details</h5>
+<a asp-action="Index" class="back-link"><i class="bi bi-arrow-left" aria-hidden="true"></i>Back to financial years</a>
+<div class="page-head">
+    <div class="page-title">
+        <div>
+            <h1>Financial year details</h1>
+        </div>
     </div>
+    <div class="page-actions">
+        <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary"><i class="bi bi-pencil" aria-hidden="true"></i>Edit</a>
+    </div>
+</div>
+
+<div class="card detail-card">
     <div class="card-body p-4">
-        <dl class="row">
-            <dt class="col-sm-3">Start Date</dt>
-            <dd class="col-sm-9">@Model.StartDate.ToString("dd/MM/yyyy")</dd>
+        <dl class="facts">
+            <div class="fact"><dt>Start Date</dt><dd>@Model.StartDate.ToString("dd/MM/yyyy")</dd></div>
 
-            <dt class="col-sm-3">End Date</dt>
-            <dd class="col-sm-9">@Model.EndDate.ToString("dd/MM/yyyy")</dd>
+            <div class="fact"><dt>End Date</dt><dd>@Model.EndDate.ToString("dd/MM/yyyy")</dd></div>
 
-            <dt class="col-sm-3">Financial Year</dt>
-            <dd class="col-sm-9"><strong>@Model.FyYear</strong></dd>
+            <div class="fact"><dt>Financial Year</dt><dd><strong>@Model.FyYear</strong></dd></div>
 
-            <dt class="col-sm-3">Status</dt>
-            <dd class="col-sm-9">
-                @if (Model.IsActive == 1)
+            <div class="fact"><dt>Status</dt><dd>@if (Model.IsActive == 1)
                 {
                     <span class="badge bg-success px-3 py-2">Active financial year @Model.FyYear</span>
                 }
                 else
                 {
                     <span class="badge bg-secondary px-3 py-2">Inactive</span>
-                }
-            </dd>
+                }</dd></div>
 
-            <dt class="col-sm-3">Created Date</dt>
-            <dd class="col-sm-9">@Model.CreatedDateTime?.ToString("dd/MM/yyyy HH:mm")</dd>
+            <div class="fact"><dt>Created Date</dt><dd>@Model.CreatedDateTime?.ToString("dd/MM/yyyy HH:mm")</dd></div>
         </dl>
-        <div class="d-flex gap-2">
-            <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-warning px-4">Edit</a>
-            <a asp-action="Index" class="btn btn-outline-secondary px-4">Back to List</a>
-        </div>
     </div>
 </div>

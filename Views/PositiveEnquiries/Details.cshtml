@@ -2,47 +2,40 @@
 @model PositiveEnquiry
 
 @{
-    ViewData["Title"] = "Positive Enquiry Details";
+    ViewData["Title"] = "Positive enquiry details";
 }
 
-<div class="card shadow-lg rounded-card">
-    <div class="card-header bg-info bg-opacity-75 text-white">
-        <h4 class="mb-0">Positive Enquiry Details</h4>
+<a asp-action="Index" class="back-link"><i class="bi bi-arrow-left" aria-hidden="true"></i>Back to positive enquiries</a>
+<div class="page-head">
+    <div class="page-title">
+        <div>
+            <h1>Positive enquiry details</h1>
+        </div>
     </div>
+    <div class="page-actions">
+        <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary"><i class="bi bi-pencil" aria-hidden="true"></i>Edit</a>
+    </div>
+</div>
+
+<div class="card detail-card">
 
     <div class="card-body">
-        <dl class="row">
-            <dt class="col-md-2 fw-bold">Quotation Date</dt>
-            <dd class="col-md-4">@Model.QuotationDate?.ToString("dd/MM/yyyy")</dd>
+        <dl class="facts">
+            <div class="fact"><dt>Quotation Date</dt><dd>@Model.QuotationDate?.ToString("dd/MM/yyyy")</dd></div>
 
-            <dt class="col-md-2 fw-bold">Company Name</dt>
-            <dd class="col-md-4">@Html.DisplayFor(model => model.CompanyNameStr)</dd>
+            <div class="fact"><dt>Company Name</dt><dd>@Html.DisplayFor(model => model.CompanyNameStr)</dd></div>
 
-            <dt class="col-md-2 fw-bold">Product Details</dt>
-            <dd class="col-md-4">@Html.DisplayFor(model => model.ProductDetails)</dd>
+            <div class="fact"><dt>Product Details</dt><dd>@Html.DisplayFor(model => model.ProductDetails)</dd></div>
 
-            <dt class="col-md-2 fw-bold">Customer Details</dt>
-            <dd class="col-md-4">@Html.DisplayFor(model => model.CustomerDetails)</dd>
+            <div class="fact"><dt>Customer Details</dt><dd>@Html.DisplayFor(model => model.CustomerDetails)</dd></div>
 
-            <dt class="col-md-2 fw-bold">Quotation Value</dt>
-            <dd class="col-md-4">@Html.DisplayFor(model => model.QuotationValue)</dd>
+            <div class="fact"><dt>Quotation Value</dt><dd>@Html.DisplayFor(model => model.QuotationValue)</dd></div>
 
-            <dt class="col-md-2 fw-bold">Current Status</dt>
-            <dd class="col-md-4">@Html.DisplayFor(model => model.CurrentStatus)</dd>
+            <div class="fact"><dt>Current Status</dt><dd>@Html.DisplayFor(model => model.CurrentStatus)</dd></div>
 
-            <dt class="col-md-2 fw-bold">Created Date</dt>
-            <dd class="col-md-4">@Model.CreatedDateTime?.ToShortDateString()</dd>
+            <div class="fact"><dt>Created Date</dt><dd>@Model.CreatedDateTime?.ToShortDateString()</dd></div>
 
-            <dt class="col-md-2 fw-bold">Created User</dt>
-            <dd class="col-md-4">@Html.DisplayFor(model => model.CreatedUserName)</dd>
+            <div class="fact"><dt>Created User</dt><dd>@Html.DisplayFor(model => model.CreatedUserName)</dd></div>
         </dl>
-
-        <!-- Buttons with proper spacing -->
-        <div class="row">
-            <div class="col-md-12 d-flex justify-content-between">
-                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
-                <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary">Edit</a>
-            </div>
-        </div>
     </div>
 </div>
